@@ -9,7 +9,7 @@ image: "/images/robotics/introduction-to-pid/pidcover.jpg"
 ## Overview
 A PID stands for a Proportional, Integral, Derivative (PID) loop. If you're in middle school/lower secondary, you probably only understand the word "Proportional", but it's ok, you don't really have to know it. 
 
-A PID loop is a feedback loop - it takes input from a sensor, processes it and produces and output. In our case, the sensors would be encoders, and the output would be the power of the motor (-127 to 127). In an ideal world, we could tell the robot to move until it reaches a set distance (setpoint), followed by a stop and it would end up at the position we want it to. However, in our world, we have something called inertia. Inertia would cause the robot to exceed this setpoint. To solve this, we would have to slow down towards the end.
+A PID loop is a feedback loop - it takes input from a sensor, processes it and produces an output. In our case, the sensors would be encoders, and the output would be the power of the motor (-127 to 127). In an ideal world, we could tell the robot to move until it reaches a set distance (setpoint), followed by a stop and it would end up at the position we want it to. However, in our world, we have something called inertia. Inertia would cause the robot to exceed this setpoint. To solve this, we would have to slow down towards the end.
 
 <img src="/images/robotics/introduction-to-pid/idealandreal.PNG" alt>
 
@@ -21,14 +21,14 @@ Also, I'm going to say this straight up, that I, personally, am inexperienced in
 Many of my juniors always ask me, "why don't we just use a motor brake, you know, power the motor in the opposite direction to stop it?". To that, I say that it would definitely cause the motor to brake down. I mean think about it, if I asked you to sprint back and forth between two points, you would definitely get tired really easily. Same with motors. Immediately changing directions for a motor can cause it to breakdown.
 
 ## Proportional (P) Controller
-So now that we've concluded that slowing down is probably the best option, we need to find out how we are going to slow down? The proportional controller would take care of this. It is simply kP*error. The error refers to the distance between the setpoint and our current position. This would form the bulk of our power. If the error is large, the power output would be high. When the errors reduces, the power delivered to the motor reduces as well. 
+So now that we've concluded that slowing down is probably the best option, we need to find out how we are going to slow down? The proportional controller would take care of this. It is simply `kP*error`. The error refers to the distance between the setpoint and our current position. This would form the bulk of our power. If the error is large, the power output would be high. When the errors reduces, the power delivered to the motor reduces as well. 
 
 <img src="/images/robotics/introduction-to-pid/pcontrol.PNG" alt>
 
 Simple, right? Don't forget that we still have to tune kP. Tuning kP for the P controller is relatively easy. Start with `kP = kI = kD = 0.0`, increase kP by 0.1 (Or small increments, depending on your system) until the robot can reach the setpoint. You may want to verify this by printing the encoder value or displaying it somewhere. If the robot starts braking or moving backwards, kP is too high - reduce it. If you are to choose between a higher or lower kP, I suggest going for a higher one as the D controller can regulate the speed for you later on.
 
 ## Integral (I) Controller
-This is `kP*sum of (errors*dT)`. For those who know integration, you would be wondering how it is linked. If we were to have the time between loops as dT, the area under the error-time graph at each point can be estimated by `dT * error`. Hence, our area under graph is the sum of errors. Some people prefer to remove dT from the equation and assume a constant sample rate, which works too - I think, at least it does theoretically.
+This is `kP*sum of (errors*dT)`. For those who know integration, you would be wondering how it is linked. If we were to have the time between loops as dT, the area under the error-time graph (integral of the graph) at each point can be estimated by `dT * error`. Hence, our area under graph is the sum of errors. Some people prefer to remove dT from the equation and assume a constant sample rate, which works too - I think, at least it does theoretically.
 
 <img src="/images/robotics/introduction-to-pid/drawingrects.PNG" alt>
 
