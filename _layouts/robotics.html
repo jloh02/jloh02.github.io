@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+  Jekyll integration by somiibo.com
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+    {% include head.html %}
+
+	</head>
+	<body class="is-loading">
+
+		<!-- Wrapper -->
+			<div id="wrapper" class="fade-in">
+
+				<!-- Header -->
+				<header id="header">
+					<a href="{{ "/" | absolute_url }}" class="logo">{{site.title}}</a>
+				</header>
+
+
+				<!-- Nav -->
+					<nav id="nav">
+
+            {% include nav.html %}
+						
+					</nav>
+
+				<!-- Main -->
+				<div id="main">
+
+          <article class="post featured">
+            <header class="major">
+              <h2><a href="#">Robotics</a></h2>
+              <p>Everything that I've done to make a block of metal move. <br>
+		      VEX Robotics, Arduino, RoboCup, First Global Challenge, REV Robotics...</p>
+            </header>
+		  				<a href="#" class="image main"><img src="{{ "/images/robotics/robotics.jpg" | absolute_url }}" alt="" /></a>
+						<p>
+							A bit on my robotics background: I started with LEGO Mindstorms 2.0 in 3rd Grade, and participated in various national LEGO championships such as the NJRC and NRPC. 
+							In secondary school / junior college (7th-12th grade), I joined the robotics club which took part mainly in VEX Robotics Competitions. This is where most of my interest in STEM education sparked. 
+						</p>
+		  				<p>
+							VRC gave me many opportunities to learn basic mechanical engineering such as simple sawing and drilling, while honing my interest in programming. It equipped me with transferrable skills such as mechanical design through varying robot designs from flywheels, catapults, double reverse four bars and many other manipulators and lifts.
+							By the end of 9th grade, I decided to specialise in programming.
+							I learnt many aspects of how to program control systems such as the use of PID loops which are covered in my blog. In addition, I was able apply high school math for robotics.
+						</p>
+						<p>
+							As a side event, our school took part in RoboCup when I was in 9th and 10th Grade. RoboCup gave me newfound knowledge as instead of programming mere routines, we had to allow the robot to have free reign on
+							how it should move through many sensor inputs. Overall, robotics provided my foundation in STEM education and aided me to find my interest in programming.
+					  	</p>
+
+          </article>
+					<!-- Post -->
+					<section class="posts">
+						{% for post in site.categories.Robotics %}
+						{% assign mod2 = forloop.index | modulo: 2 %}
+							<article>
+								<header>
+									<span class="date">{{ post.date | date_to_string }}</span>
+									<h2><a href="{{ post.url | absolute_url }}">{{ post.title }}</a></h2>
+								</header>
+								<a href="{{ post.url | absolute_url }}" class="image fit"><img src="{{ post.image | absolute_url }}" alt="" /></a>
+								<p>{{ post.excerpt }}</p>
+								<ul class="actions">
+									<li><a href="{{ post.url | absolute_url }}" class="button">Read More</a></li>
+								</ul>
+							</article>							
+						{% endfor %}
+						{% if site.categories.Robotics | size | modulo: 2  == 1 %}
+							<article>
+								<header>
+									<span class="date"></span>
+									<h2><a href=""></a></h2>
+								</header>
+								<a href="" class="image fit"><img src="" alt="" /></a>
+								<p></p>
+							</article>
+						{% endif %}
+					</section>
+
+					</div>
+
+				<!-- Footer -->
+        {% include foot.html %}
+
+			</div>
+
+			<!-- Scripts -->
+			{% include scripts-main.html %}
+			{% include tracking.html %}
+
+	</body>
+</html>

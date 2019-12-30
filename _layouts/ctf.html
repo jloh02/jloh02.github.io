@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<!-- 
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+  Jekyll integration by somiibo.com
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+    {% include head.html %}
+
+	</head>
+	<body class="is-loading">
+
+		<!-- Wrapper -->
+			<div id="wrapper" class="fade-in">
+
+				<!-- Header -->
+				<header id="header">
+					<a href="{{ "/" | absolute_url }}" class="logo">{{site.title}}</a>
+				</header>
+
+
+				<!-- Nav -->
+					<nav id="nav">
+
+            {% include nav.html %}
+						
+					</nav>
+
+				<!-- Main -->
+				<div id="main">
+
+          <article class="post featured">
+            <header class="major">
+              <h2><a href="#">Capture The Flag (CTF)</a></h2>
+              <p>Road to hackerman. Writeups of CTFs I've played under HATS SG, ItzyBitzySpider and Acsii</p>
+            </header>
+						<p>My journey in CTF started when <a href="https://blog.idiot.sg">@Lord_Idiot</a> introduced me to Whitehacks in early 2019. 
+							From then, I picked up an interest in CTFs along with a couple of friends in my grade.
+		  					I have since joined the Hack All Things Society (<a href="https://hats.sg">HATS SG</a>) and continued participating in local CTFs and online ones.
+						</p>
+          </article>
+					<!-- Post -->
+					<section class="posts">
+						{% for post in site.categories.CTF %}
+						{% assign mod2 = forloop.index | modulo: 2 %}
+							<article>
+								<header>
+									<span class="date">{{ post.date | date_to_string }}</span>
+									<h2><a href="{{ post.url | absolute_url }}">{{ post.title }}</a></h2>
+								</header>
+								<a href="{{ post.url | absolute_url }}" class="image fit"><img src="{{ post.image | absolute_url }}" alt="" /></a>
+								<p>{{ post.excerpt }}</p>
+								<ul class="actions">
+									<li><a href="{{ post.url | absolute_url }}" class="button">Read More</a></li>
+								</ul>
+							</article>							
+						{% endfor %}
+						{% if site.categories.CTF | size | modulo: 2  == 1 %}
+							<article>
+								<header>
+									<span class="date"></span>
+									<h2><a href=""></a></h2>
+								</header>
+								<a href="" class="image fit"><img src="" alt="" /></a>
+								<p></p>
+							</article>
+						{% endif %}
+					</section>
+
+					</div>
+
+				<!-- Footer -->
+        {% include foot.html %}
+
+			</div>
+
+			<!-- Scripts -->
+			{% include scripts-main.html %}
+			{% include tracking.html %}
+
+	</body>
+</html>

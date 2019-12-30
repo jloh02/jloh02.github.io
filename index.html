@@ -1,0 +1,106 @@
+---
+layout: null
+title: jloh's Blog
+description: This blog details my works in Robotics, Capture-The-Flag (CTF) Competitions and other STEM related projects. In this blog, you'll find posts on various Science, Technology, Engineering and Mathematics (STEM) fields. They are categorised under Robotics, CTFs and Projects. The robotics section would be mainly about my programming experience in VEX Robotics, RoboCup and First Global Challenge (FGC) under the team "8059 Blank.". This includes Proportional Integral Derivitive (PID) loops, odometry and various libraries used during my time in robotics. The CTF section contain writeups on challenges in previous competitions which I have participated in under multiple organizations. The projects section has literally anything other than Robotics and CTF, such as Machine Learning (ML) related projects.
+sitemap:
+    priority: 1.0
+    lastmod: 2019-12-14
+    changefreq: weekly
+---
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+  Jekyll integration by somiibo.com
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head> 
+		{% include head.html %}	
+	</head>
+	<body class="is-loading">
+
+		<!-- Wrapper -->
+			<div id="wrapper" class="fade-in">
+
+				<!-- Intro -->
+					<div id="intro">
+            <h1>{{site.title}}</h1>
+						<h2>Just my random ideas and thoughts</h2>
+						<p>Sometimes you just gotta try it to find out. If it don't work just keep trying...</p>
+						<ul class="actions">
+							<li><a href="#header" class="button icon solo fa-arrow-down scrolly">Continue</a></li>
+						</ul>
+					</div>
+
+				<!-- Header -->
+					<header id="header">
+						<a href="{{ "/" | absolute_url }}" class="logo">{{site.title}}</a>
+					</header>
+
+				<!-- Nav -->
+					<nav id="nav">
+
+            {% include nav.html %}
+
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+						<!-- Featured Post -->
+							<article class="post featured">
+								<header class="major">
+									<h2><a href="#">Hi, I'm Jloh</a></h2>
+									<p>If this your first time here, this blog details my works in Robotics, <br />
+									Capture-The-Flag (CTF) Competitions and other STEM related projects</p>
+								</header>
+								<a href="#" class="image main"><img src="{{ "/images/stem-education.jpg" | absolute_url }}" alt="" /></a>
+								<p>In this blog, you'll find posts on various Science, Technology, Engineering and Mathematics (STEM) fields. They are categorised under Robotics, CTFs and Projects.</p>
+								<p>The <a href="/robotics/">robotics</a> section would be mainly about my programming experience in VEX Robotics, RoboCup and First Global Challenge (FGC) under the team "8059 Blank.". This includes Proportional Integral Derivitive (PID) loops, odometry and various libraries used during my time in robotics.</p>
+								<p>The <a href="/ctf/">CTF</a> section contain writeups on challenges in previous competitions which I have participated in under multiple organizations.</p>
+								<p>The <a href="/projects/">projects</a> section has literally anything other than Robotics and CTF, such as Machine Learning (ML) related projects. </p>
+								<p>Take a look at my latest posts below or click on the relevant hyperlinks/tabs above to take a look at some of my posts. Alternatively, if you want to find out more about my boring life and achievements, head on to the <a href="/about/">about</a> section.</p>
+
+							</article>
+						
+						
+
+						<!-- Posts -->
+							<section class="posts">
+                {% for post in site.posts limit:2 %}
+  								<article>
+  									<header>
+  										<span class="date">{{ post.date | date_to_string }}</span>
+  										<h2><a href="{{ post.url | absolute_url }}">{{ post.title }}</a></h2>
+  									</header>
+  									<a href="{{ post.url | absolute_url }}" class="image fit"><img src="{{ post.image | absolute_url }}" alt="" /></a>
+  									<p>{{ post.excerpt }}</p>
+  									<ul class="actions">
+  										<li><a href="{{ post.url | absolute_url }}" class="button">Read More</a></li>
+  									</ul>
+  					 			</article>
+                  
+                {% endfor %}
+
+							</section>
+
+						<!-- Footer -->
+							<!--footer>
+                <ul class="actions">
+                  <li><a href="{{ "/blog/" | absolute_url }}" class="button">Blog</a></li>
+                </ul>
+							</footer-->
+
+					</div>
+
+				<!-- Footer -->
+        {% include foot.html %}
+
+			</div>
+
+		<!-- Scripts -->
+		{% include scripts-main.html %}
+    {% include tracking.html %}
+
+	</body>
+</html>

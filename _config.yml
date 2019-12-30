@@ -1,0 +1,66 @@
+# Site 
+title:              jloh's Blog
+author:             jloh
+bio:                '<insert bio>'
+description:        This blog details my works in Robotics, Capture-The-Flag (CTF) Competitions and other STEM related projects. In this blog, you'll find posts on various Science, Technology, Engineering and Mathematics (STEM) fields. They are categorised under Robotics, CTFs and Projects. The robotics section would be mainly about my programming experience in VEX Robotics, RoboCup and First Global Challenge (FGC) under the team "8059 Blank.". This includes Proportional Integral Derivitive (PID) loops, odometry and various libraries used during my time in robotics. The CTF section contain writeups on challenges in previous competitions which I have participated in under multiple organizations. The projects section has literally anything other than Robotics and CTF, such as Machine Learning (ML) related projects.
+locale:             en_US
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "https://jloh02.github.io" # the base hostname & protocol for your site
+
+# Comments
+disqus_shortname:   default
+
+# Social
+analytics-id:       UA-154630943-1
+twitter:            default
+facebook:           default
+instagram:          default
+github:             default
+
+# personal
+affiliations:       HATS SG, 8059 Blank., acsii, ItzyBitzySpider
+location:           Singapore, Singapore
+
+# Other
+background_image:   /images/bg.jpg
+
+defaults:
+- scope:
+    path: ''
+    type: posts
+  values:
+    permalink: "/:categories/:title/"
+    layout: post
+    author:
+
+# Jekyll
+permalink:          pretty
+markdown:           kramdown
+highlighter:        rouge
+kramdown:
+  auto_ids:         true
+  footnote_nr:      1
+  entity_output:    as_char
+  toc_levels:       1..6
+  enable_coderay:   false
+mathjax:            true
+sass:
+  sass_dir:         _sass
+  style:            compressed
+
+# Gems
+gems:
+  - jekyll-mentions
+  - jekyll-sitemap
+  - jekyll-feed
+  - jekyll-gist
+  - jekyll-paginate
+
+paginate: 6
+paginate_path: "/blog/page:num/"
+
+jekyll-mentions:
+    base_url: https://github.com
+
+# Exclude list
+exclude: [README.md, Gemfile, Gemfile.lock, node_modules, gulpfile.js, package.json, _site, src, vendor, CNAME, LICENSE, Rakefile, old]
