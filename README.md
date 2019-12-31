@@ -1,5 +1,5 @@
 # GitHub Respository for jloh02.github.io Website
-<jloh02.github.io> 
+<http://jloh02.github.io/> 
 
 ## Theme
 Massively Jekyll Theme: <https://github.com/jekyllup/jekyll-theme-massively>
