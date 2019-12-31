@@ -18,5 +18,8 @@ The feedback loop is the proportional component of a PID loop. This is integrati
 ## Conclusion
 This article may be short and simple. However, tuning a velocity PF loop is harder than a PD loop (in my opinion, probably because I've had more experience tuning PD loops). It is still a useful skill as velocity PID loops are used everywhere in real life, one simple example is the aircon or fan you are sitting under.
 
+## Alternative
+Another solution not discussed was a Takeback Half Algorithm (TBH). This approach is relatively less documented than PID but still widely used, especially in flywheel control.
+
 ## Resources
 <https://github.com/FRC-Team-955/Team955RobotLib/wiki/PIDF-Loop>

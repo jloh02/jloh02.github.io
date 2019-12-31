@@ -12,7 +12,7 @@ sitemap:
 <!--span class="image left"><img src="{{ "/images/pic04.jpg" | absolute_url }}" alt="" /></span-->
 <div class="box">
   <p>
-I am Jloh, a Singaporean who started my interest in STEM eduction in 4th Grade when I joined my school robotics club. I have been participating in robotics competitions under the club <a href="https://www.instagram.com/8059_blank_acsi/">8059 Blank.</a> since I was in 7th Grade. I also gained interests in playing CTFs since 2018. I play under <a href="https://hats.sg">HATS SG</a> (though I'm pretty much useless there), acsii and ItzyBitzySpider. 
+I am Jloh, a Singaporean who started my interest in STEM eduction in 4th Grade when I joined my school robotics club. I have been participating in robotics competitions under the club <a href="https://www.instagram.com/8059blank/">8059 Blank.</a> since I was in 7th Grade. I also gained interests in playing CTFs since 2018. I play under <a href="https://hats.sg">HATS SG</a> (though I'm pretty much useless there), acsii and ItzyBitzySpider. 
   </p>
 </div>
 
