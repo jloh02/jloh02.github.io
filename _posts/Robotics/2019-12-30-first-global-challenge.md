@@ -17,4 +17,4 @@ Initially, when we reached Dubai, we had scraped the hope of having rapid fire m
 After much trial and error implementation, the code followed a decently simple logic. Use a low PD loop to get to the desired shooting velocity. When a button was pressed, kP was increased and the intake would move continuously for a set amount of time. This allowed versatilility in our PD loops, overcoming both limitations.
 
 ## Post Competition Review
-Of course, such a solution was not optimal. We needed a much better solution which was a problem for another day, considering that I would almost never velocity control in robotics tasks. Never did I think I would use [velocity control in VEX Robotics]().
+Of course, such a solution was not optimal. We needed a much better solution which was a problem for another day, considering that I would almost never velocity control in robotics tasks. Never did I think I would use [velocity control in VEX Robotics](https://jloh02.github.io/robotics/velocity-control/).
