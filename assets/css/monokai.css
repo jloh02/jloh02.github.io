@@ -1,6 +1,11 @@
-.highlight {
+/*Inner Code Block Box*/
+pre.highlight {
   width: 97%;
-  margin: 5px auto;
+  /*margin: 5px auto;*/
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-right: auto;
+  margin-left: auto;
   font-size: 16px;
   line-height: 1.2em;
   background-color: #000000;
@@ -29,3 +34,18 @@
   .highlight .css .k, .highlight .nb, .highlight .kd, .highlight .n {
     font-style: italic;
     color: #84d7ec; }
+
+/*Outer Black Border*/
+div.highlight {
+  width: 97%;
+  margin-top: 5px;
+  margin-bottom: 35px;
+  margin-right: auto;
+  margin-left: auto;
+  font-size: 16px;
+  line-height: 1.2em;
+  background-color: #000000;
+  color: #EEEEEE;
+  padding: 5px;
+  box-shadow: 3px 3px 12px 3px #000000;
+  border-radius: 10px; }
