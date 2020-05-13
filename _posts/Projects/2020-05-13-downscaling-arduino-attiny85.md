@@ -12,7 +12,7 @@ Just like the ATMEGA328P, this project was part of an even bigger project. The A
 Do note the ATTINY85 is meant for really small projects where not much SRAM is required.
 
 ## Requirements
-- Arduino Uno with existing ATMEGA328P
+- Arduino Uno
 - ATTINY85
 - Wires (Either use jumper wires or solid core hookup wires which require wire strippers, pliers and cutters)
 - Breadboard
@@ -44,7 +44,7 @@ D11 | 5
 D12 | 6
 D13 | 7
 
-IMPORTANT: In addition, connect a 10uF capacitor from GND to RESET on your Uno to ensure the Uno does not reset when uploading to the ATTINY85.
+IMPORTANT: In addition, connect a 10uF capacitor from GND to RESET on your Uno to ensure the Uno does not reset when uploading to the ATTINY85. If you are using an electrolytic capacitor, ensure the negative side is connected to GND.
 
 My setup with very terrible wiring can be found below. You may choose to use another power source instead of the 5V and GND from the Uno but that's up to you.
 
