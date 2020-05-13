@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Configuring an ATMEGA328P to Replace and Arduino Uno"
+title:  "Configuring an ATMEGA328P to Replace an Arduino Uno"
 date:   2020-05-03
 excerpt: "Bare minimal setup of an Arduino Uno"
 categories: [Projects]
