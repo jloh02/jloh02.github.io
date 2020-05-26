@@ -1,13 +1,16 @@
 ---
 layout: post
 title:  "Configuring an ATMEGA328P to Replace an Arduino Uno"
-date:   2020-05-03
+date:   2020-05-26
 excerpt: "Bare minimal setup of an Arduino Uno"
 categories: [Projects]
 image: "/images/projects/configuring-atmega328p-arduino/cover.jpg"
 ---
+## Introduction
+This is version 2. A lot of content was copied from the [previous guide using Nick Gammon's method](https://jloh02.github.io/projects/configuring-atmega328p-arduino-deprecated/).
+
 ## Rationale
-This project was part of an even bigger project which I'm not allowed to talk about yet. But essentially, we wanted to use the ATMEGA328P instead of the Arduino Uno. For those who do not know the Arduino Uno uses the ATMEGA328P microcontroller. So we wanted to just use the microcontroller as is for a few reasons - cheaper and more power efficient.
+This project was part of an even bigger project. But essentially, we wanted to use the ATMEGA328P instead of the Arduino Uno. For those who do not know the Arduino Uno uses the ATMEGA328P microcontroller. So we wanted to just use the microcontroller as is for a few reasons - cheaper and more power efficient.
 
 This configuration allows programming of the ATMEGA328P using the Arduino IDE with almost no restrictions
 
@@ -35,7 +38,7 @@ Below is the pinout for the ATMEGA328P. Note that pin 1 is denoted by a small do
 
 <img class="image normal" src="/images/projects/configuring-atmega328p-arduino/atmega-pinout.jpg" alt>
 
-Connect the Arduino Uno to the breadboard as per below.
+Connect the Arduino Uno to the breadboard as per below. In other words, connect the pins 11-13 on the Uno to the corresponding Arduino pins on the ATMEGA328P, followed by a connection between pin 10 on the Uno and pin 1 on the ATMEGA328P.
 
 Arduino Uno Pin | ATMEGA328P Pin 
 --- | --- 
@@ -50,14 +53,24 @@ You can choose to use the Uno's 5V and GND to power the ATMEGA328P or use an ext
 
 <img class="image normal" src="/images/projects/configuring-atmega328p-arduino/breadboard-wiring-with-power-circle.png" alt>
 
-Now you may connect your Uno to your computer. Using [Atmega_Board_Programmer](https://github.com/nickgammon/arduino_sketches/tree/master/Atmega_Board_Programmer), we can now upload the bootloader. In your Arduino IDE under Tools, set the following:
+A full setup of my messy wiring is here.
+
+<img class="image normal" src="/images/projects/configuring-atmega328p-arduino/bootloader-wiring.jpg" alt>
+
+Upload the ArduinoISP code to your Uno, setting the usual Board and Programmer. From `File > Preferences`, add the following Boards Manager URL:
+
+`https://mcudude.github.io/MiniCore/package_MCUdude_MiniCore_index.json`
+
+If you already have other URLs, append it separated by a comma. Restart your Arduino IDE. Open `Tools > Board > Boards Manager` and search for the MiniCore. Install the latest version, then restart your IDE. Select the ATMEGA328 board under `Tools > Board`. You are now presented with many settings. You can ignore most of them for now. Choose the clock you intend to use. If you do not have an external crystal oscillator, just select `Internal 8MHz`. Set the other settings as follows
 
 Tools | Setting 
 --- | --- 
-Board | Arduino Uno
+Board | ATmega328
+Clock | Internal 8MHz (If using internal clock)
+Variant | Depends on your MCU (ATMEGA328____)
 Programmer | Arduino as ISP
 
-Upload the [Atmega_Board_Programmer](https://github.com/nickgammon/arduino_sketches/tree/master/Atmega_Board_Programmer) to your Arduino Uno and open the serial monitor using `ctrl-shift-M`. Remember to change your baud rate at the bottom right of the serial monitor to 115200. If you saw giberish, reset your Uno via the rest button (beige color) after changing the baud rate. When prompted `Type 'L' to use Lilypad (8 MHz) loader, or 'U' for Uno (16 MHz) loader ...`, enter `L` in the field at the top of the serial monitor and press Enter. Then enter `G` to burn the bootloader. At the end of it, you should see `No errors found` in one of the lines.
+Now go to `Tools > Burn Bootloader`. It should look as if code is being uploaded, followed by a message saying "Done Burning Bootloader".
 
 This completes the burning of the bootloader. You may disconnect the wires stated in this section.
 
@@ -66,7 +79,7 @@ We can now use the Arduino Uno simply for debugging and uploading purposes. Howe
 
 <img class="image normal" src="/images/projects/configuring-atmega328p-arduino/arduino-uno-with-atmega.jpg" alt>
 
-The best way to remove it is exceedingly disgusting. Use a flathead screwdriver as a lever and slowly pry out the ATMEGA328P. Do it on both sides bit by bit, taking care not to bend the pins. Once one side is entirely out, hold on to that side using your hand and use the screwdriver to pull out the remaining pins. Clearly, no onel ikes to do this, so if you're gonna do it multiple times, use a ZIF.
+The best way to remove it is exceedingly disgusting. Use a flathead screwdriver as a lever and slowly pry out the ATMEGA328P. Do it on both sides bit by bit, taking care not to bend the pins. Once one side is entirely out, hold on to that side using your hand and use the screwdriver to pull out the remaining pins. Clearly, no one likes to do this, so if you're gonna do it multiple times, use a ZIF.
 
 Connect the Arduino Uno to the breadboard as per below.
 
@@ -77,17 +90,14 @@ RX (D0) | 2
 TX (D1) | 3
 5V and GND | Same as Bootloader Burning
 
-<img class="image normal" src="/images/projects/configuring-atmega328p-arduino/upload-wiring.jpg" alt>
-
-Set the following IDE settings.
+Set the following settings in your Arduino IDE:
 
 Tools | Setting 
 --- | --- 
-Board | Arduino Pro or Pro Mini
-Processor | ATMEGA328P (3.3V, 8MHz)
+Board | ATmega328
+Clock | Internal 8MHz (If using internal clock)
+Variant | Depends on your MCU (ATMEGA328____)
 Programmer | Arduino as ISP
-
-For the processor, note that the frequency matters, not the voltage.
 
 Now you can test a blink code by uploading the following code:
 ```cpp
@@ -110,9 +120,10 @@ To confirm it is definitely working, you can change the delays.
 ## Conclusion
 So that is how we can create a more minimal setup to replace the Arduino Uno. This saves power and costs if you intend to have multiple setups. In our use case, we needed roughly 30 microcontrollers to work together, so spending $20 on a single Uno and a couple of dollars on each ATMEGA328P definitely saved us a lot of our budget.
 
-I've also compiled all my references in case you wanted to read up a bit more, or do things a little differently. Nick Gammon's guide was my primary source of information though the instructions tend to be a bit long due to the large coverage of his article.
+I've also compiled all my references in case you wanted to read up a bit more, or do things a little differently. Nick Gammon's guide was my primary source of information though the instructions tend to be a bit long due to the large coverage of his article. I've also chosen to use MCUdude's MiniCore instead due to its high configurability.
 
 ## Resources
 <http://www.gammon.com.au/breadboard><br>
+<https://github.com/MCUdude/MiniCore><br>
 <https://www.youtube.com/watch?v=Sww1mek5rHU><br>
 <https://www.youtube.com/watch?v=dpgcBsl9D4k>

@@ -55,6 +55,8 @@ Now we need to add the ATTINY85 board to our Arduino IDE. Go to `File > Preferen
 
 <https://raw.githubusercontent.com/damellis/attiny/ide-1.6.x-boards-manager/package_damellis_attiny_index.json>
 
+Edit: I found a generally more versatile and feature-rich core library from <https://github.com/SpenceKonde/ATTinyCore>. The board manager URL to add is <http://drazzy.com/package_drazzy.com_index.json>
+
 If you had other URLs in the textbox, append the link with a comma separating the links. After you're done, click OK and restart your IDE.
 
 Set the following settings under Tools:
@@ -95,6 +97,10 @@ To confirm it is definitely working, you can change the delays and reupload the 
 
 ## Conclusion
 So that is how we can minimize the size of our Arduino projects using the ATTINY85. In case my guide was not clear enough for you, you could use a number of guides. However, do note that some of these guides may not include the part about uploading the ArduinoISP code to the Uno first. My resources for said guides are found below.
+
+## Moving Forward
+Now you probably want to have Serial output to print your favourite "Hello World" program. As the ATTINY85 does not have hardware Serial ports, you have to use the SoftwareSerial library. The guide for that can be found [here](https://jloh02.github.io/projects/connecting-attiny85-serial-monitor/)
+
 
 ## Resources
 <https://create.arduino.cc/projecthub/arjun/programming-attiny85-with-arduino-uno-afb829><br>
