@@ -72,7 +72,7 @@ Solves: 12
 > Do what you can! Find that hidden S3 bucket (in the format “word1-word2-s4fet3ch”) and find out what was exfiltrated!
 
 #### Solution
-There doesn't seem to be any obvious way to find out the leaking bucket. So we decided to brute force to find out. With only 2 words to guess, brute force doesn't seem unreasonable, taking worst case of $n^2$ tries where $n$ is the number of words in our wordlist. 
+There doesn't seem to be any obvious way to find out the leaking bucket. So we decided to brute force to find out. With only 2 words to guess, brute force doesn't seem unreasonable, taking worst case of $$n^2$$ tries where $$n$$ is the number of words in our wordlist. 
 
 ![](https://i.imgur.com/H499XQt.png)
 
