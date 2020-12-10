@@ -60,6 +60,10 @@
 		text-align: justify;
 		margin: 0 0 _size(element-margin) 0;
 	}
+	
+	p:last-child{
+		margin-block-end: 0em;
+	}
 
 	h1, h2, h3, h4, h5, h6 {
 		font-family: _font(family-heading);

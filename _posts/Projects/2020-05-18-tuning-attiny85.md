@@ -7,7 +7,7 @@ categories: [Projects]
 image: "/images/projects/tuning-attiny85/cover.jpg"
 ---
 ## Introduction
-Whilst trying to get SoftwareSerial to work between multiple ATTINY85s, I found myself in the face of inconsistent gibberish. I would receive decent data for about 4s and everything after would print unprintable characters. As such, I suspected it was to do with the crystal oscillator. Without much resources due to the lockdown, I could only rely on my trusty (not really) serial monitor. This guide shows the method I used to get all the crystal oscillators tuned.
+Whilst trying to get SoftwareSerial to work between multiple ATTINY85s, I found myself in the face of inconsistent gibberish. I would receive decent data for about 4s and everything after would print unprintable characters. As such, I suspected it was to do with the crystal oscillator. Without much resources due to the lockdown, I could only rely on my trusty (not really) serial monitor. This guide shows the method I used to get all the crystal oscillators tuned to be in sync.
 
 ## Background Information
 According to the [SpenceKonde ATTinyCore GitHub](https://github.com/SpenceKonde/ATTinyCore), the internal crystal oscillators are factory calibrated up to +/-10% which works for most cases such as regular printing to serial monitor so you probably won't ever need to touch this part of the ATTINY85. But you most likely need to calibrate it further for anything to do with precise timing.
@@ -15,7 +15,7 @@ According to the [SpenceKonde ATTinyCore GitHub](https://github.com/SpenceKonde/
 The internal oscillators can be tuned by changing the `OSCCAL` register. For example, we can simple set `OSCCAL = 100`
 
 ## Code
-We can do a simple brute force approach. Since it is factory callibrated to +/-10%, our ideal point should be within 10%. But we want to find the working bounds of it as well (values which are slightly higher or lower than perfect can print correct results). To find both lower and upper bounds, we check from 80% to 120% of the orignal OSCCAL. An extra arbitrary tolerance of +/-5 was added to make sure we get both bounds.
+We can do a simple brute force approach. Since it is factory calibrated to +/-10%, our ideal point should be within 10%. But we want to find the working bounds of it as well (values which are slightly higher or lower than perfect can print correct results). To find both lower and upper bounds, we check from 80% to 120% of the original OSCCAL. An extra arbitrary tolerance of +/-5 was added to make sure we get both bounds.
 
 ```cpp
 #include <SoftwareSerial.h>
@@ -51,7 +51,7 @@ void loop() {}
 The above code prints OSCCAL 1000 times to verify that a certain OSCCAL value works. Based on experience, about 500 should also be sufficient but 1000 is just to be very certain. Do not be alarmed that you see huge amounts of "alien language". That just means whatever value that is, it is not nearly suitable to be the OSCCAL
 
 ## Obtaining the Optimal OSCCAL
-The above script takes about 10-15 minutes to run. You can go and have a coffee break in the meantime. If you'd like to accelerate the process by staring at the screen, go ahead. Stare at the screen until you don't see any abnomalies and record that as your lower bound. Once you see abnomalies again, record the previous OSCCAL as your upper bound. Anomalies are any single value in which the line break is not printed or a character is printed wrongly. Once you have your bounds, `Optimal OSCCAL = Average of Bounds = (Upper+Lower)/2`.
+The above script takes about 10-15 minutes to run. You can go and have a coffee break in the meantime. If you'd like to accelerate the process by staring at the screen, go ahead. Stare at the screen until you don't see any anomalies and record that as your lower bound. Once you see abnomalies again, record the previous OSCCAL as your upper bound. Anomalies are any single value in which the line break is not printed or a character is printed wrongly. Once you have your bounds, `Optimal OSCCAL = Average of Bounds = (Upper+Lower)/2`.
 
 Alternatively, we could copy-paste the entire serial monitor output into a text file and run the python script below to find the optimal OSCCAL which does a simple count of `OSCCAL = <value>\n`. It first prints an array with OSCCAL values suitable for printing at 9600 baud rate. Assuming you printed enough values to have reliable results, it would also print an optimal OSCCAL value using the start and end of the array as your bounds.
 

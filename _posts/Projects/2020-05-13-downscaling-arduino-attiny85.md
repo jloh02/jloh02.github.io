@@ -93,7 +93,7 @@ You can now disconnect all wires except the 5V and GND line. Connect the positiv
 
 <img class="image normal" src="/images/projects/downscaling-arduino-attiny85/led-test.jpg" alt>
 
-To confirm it is definitely working, you can change the delays and reupload the code.
+To confirm it is definitely working, you can change the delays and re-upload the code.
 
 ## Conclusion
 So that is how we can minimize the size of our Arduino projects using the ATTINY85. In case my guide was not clear enough for you, you could use a number of guides. However, do note that some of these guides may not include the part about uploading the ArduinoISP code to the Uno first. My resources for said guides are found below.

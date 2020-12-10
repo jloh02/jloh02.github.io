@@ -6,9 +6,6 @@ excerpt: "Bare minimal setup of an Arduino Uno"
 categories: [Projects]
 image: "/images/projects/configuring-atmega328p-arduino/cover.jpg"
 ---
-## Introduction
-This is version 2. A lot of content was copied from the [previous guide using Nick Gammon's method](https://jloh02.github.io/projects/configuring-atmega328p-arduino-deprecated/).
-
 ## Rationale
 This project was part of an even bigger project. But essentially, we wanted to use the ATMEGA328P instead of the Arduino Uno. For those who do not know the Arduino Uno uses the ATMEGA328P microcontroller. So we wanted to just use the microcontroller as is for a few reasons - cheaper and more power efficient.
 
@@ -118,7 +115,7 @@ You can test it is working by connecting the red pin of the multimeter to the pi
 To confirm it is definitely working, you can change the delays.
 
 ## Conclusion
-So that is how we can create a more minimal setup to replace the Arduino Uno. This saves power and costs if you intend to have multiple setups. In our use case, we needed roughly 30 microcontrollers to work together, so spending $20 on a single Uno and a couple of dollars on each ATMEGA328P definitely saved us a lot of our budget.
+So that is how we can create a more minimal setup to replace the Arduino Uno. This saves power and costs if you intend to have multiple setups. In our use case, we needed roughly 30 microcontrollers to work together, so spending $20 on a single Uno vs a couple of dollars on each ATMEGA328P definitely saved us a lot of our budget.
 
 I've also compiled all my references in case you wanted to read up a bit more, or do things a little differently. Nick Gammon's guide was my primary source of information though the instructions tend to be a bit long due to the large coverage of his article. I've also chosen to use MCUdude's MiniCore instead due to its high configurability.
 
