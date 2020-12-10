@@ -168,7 +168,7 @@ We are given a `.mem` file (Memory dump). We can use the premier tool for memory
 For those who are using volatility for your first time, the format for each command is `vol -f <file> <plugin/command>`
 
 From previous CTFs, I follow a standard procedure (assuming it is a Windows machine which is typical of many CTFs), running `imagescan` then `pslist`. This is a very good starting point as it gives an idea of the machine profile. Think of profiles as a type of Windows machine (ie Windows7, WindowsXP, etc). 
-```
+```bash
 $ vol -f forensics-challenge-1.mem imageinfo
 Volatility Foundation Volatility Framework 2.6.1
 INFO    : volatility.debug    : Determining profile based on KDBG search...
@@ -178,7 +178,7 @@ INFO    : volatility.debug    : Determining profile based on KDBG search...
 .
 ```
 We can choose the first suggested profile, then run `pslist` to check that the profile chosen works well. Remember to append `--profile=<chosen_profile>` in each volatility command now. `pslist` would return the entire process list.
-```
+```bash
 $ vol -f forensics-challenge-1.mem --profile=Win7SP1x64 pslist
 Volatility Foundation Volatility Framework 2.6.1
 Offset(V)          Name                    PID   PPID   Thds     Hnds   Sess  Wow64 Start                          Exit
@@ -225,7 +225,7 @@ To analyze a Google Chrome history, we can use the `filescan` and `dumpfiles` pl
 Alternatively, we can install the `chromehistory` plugin from https://github.com/superponible/volatility-plugins. If your volatility was compiled from source, you can copy the plugin files into `volatility/volatility/plugins` rather than passing the `--plugins=<directory>` argument. This makes it easier to install plugins though it can get very messy if you wish to uninstall them so I only advise to do this if you really want the convenience of installing plugins which you KNOW work.
 
 Most of the websites here are fluff as one could tell from random Google searches and going to STACK conference website homepage. However, 2 lines caught my attention:
-```
+```bash
 $ vol -f forensics-challenge-1.mem --profile=Win7SP1x64 chromehistory
 .
 .
@@ -252,7 +252,7 @@ However, the real technical term for a similar file is a bitmap (.BMP). An uncom
 > vogcetc-h{gsm3myr03R_rGdn33ulB}z3
 
 Yet another alternative, if you are more familiar with tools, is to use [zsteg](https://github.com/zed-0xff/zsteg) which is able to produce different steganographic outputs, including lowest significant bit (LSB) and RGB bytes.
-```
+```bash
 $ zsteg -a image.png
 b8,r,lsb,xy         .. text: "gthsm0_d3B3"
 b8,g,lsb,xy         .. text: "oe-g3rRG3lz"
@@ -288,16 +288,14 @@ We are given a WAV audio file. Sometimes, the spectrogram contains text as seen 
 
 The text found is a base64 text as seen from the variation of letters used and the `=` padding to ensure the length is a multiple of 4. After decoding it (using https://base64decode.org or `base64` tool), we find a pastebin link (https://pastebin.com/jETj2uUb) which contains the text below.
 
-```
+```brainfuck
 ++++++++++[>+>+++>+++++++>++++++++++<<<<-]>>>>++++++++++++++++.------------.+.++++++++++.----------.++++++++++.-----.+.+++++..------------.---.+.++++++.-----------.++++++.
 ```
 
 This is code written in the brainf*ck programming language, notorious for its minimalism. Running this code on an [online compiler](https://copy.sh/brainfuck/) yields the text `thisisnottheflag`. Welp, looks like a dead end.
 
 #### Back to the WAV file
-After awhile, due to the challenge title not being sufficiently clear, the following hint was given: `Xiao wants to help. Will you let him help you?`. The word "Xiao" means "crazy" in the Chinese hokkien dialect. The challenge title "Voices in the head" refers to a crazy person and hence Xiao. 
-
-Xiao is a reference to Xiao Steganography. Steganography is a method used for hiding information in files, in this case, WAV files. Using a [Xiao Steganography decoder](https://download.cnet.com/Xiao-Steganography/3000-2092_4-10541494.html), we notice that there is a ZIP file hidden in the WAV file. 
+After awhile, due to the challenge title not being sufficiently clear, the following hint was given: `Xiao wants to help. Will you let him help you?`. Xiao is a reference to Xiao Steganography. Steganography is a method used for hiding information in files, in this case, WAV files. Using a [Xiao Steganography decoder](https://download.cnet.com/Xiao-Steganography/3000-2092_4-10541494.html), we notice that there is a ZIP file hidden in the WAV file. 
 
 ![](https://i.imgur.com/dRBaVrr.png)
 
@@ -321,7 +319,7 @@ The only string we've got is `thisisnottheflag` from the brainf*ck code. When th
 #### Extracting the ZIP contents
 While attempting to extract the ZIP, a password was requested. Since trying the same password (`thisisnottheflag`) doesn't work, looks like we don't have a password this time. What if the password was stored in plaintext, such as in a comment, in the ZIP? Running `strings` would return the following:
 
-```
+```bash
 $ strings xiao.zip
 .
 .
@@ -405,7 +403,7 @@ In addition, we notice that the last quarter of the data packets given are not a
 
 Using the Python script below, the bits of the data can be extracted including the headers and addresses. Thresholds for headers and timings between bits could be empirically derived from Saleae in case the transmission does not directly correspond to the original NEC IR specifications. 
 
-```python=2
+```py
 import pandas as pd
 
 # Empirically determined timings for 0s and 1s
@@ -440,7 +438,7 @@ with open('out.txt','w') as f:
 ```
 
 The output of the above script produces a text file including headers and addresses. The block below only contains one of 6 repeated instances - the message was sent 6.5 times.
-```
+```TXT
 100000000111111110000000000000000
 100000000111111110000000000000000
 100000000111111110110011101101111
@@ -461,7 +459,7 @@ The output of the above script produces a text file including headers and addres
 ```
 
 Since the address and its logical inverse is consistent throughout (only 1 destination address), the header, address and inverse address can be removed. I used a simple find and replace in a text editor to remove `10000000011111111`. The first 2 lines can also be excluded since they are null bytes.
-```
+```TXT
 0110011101101111
 0111011001110100
 0110010101100011
@@ -494,7 +492,7 @@ Solves: 5
 
 #### Initial Analysis
 We are provided with a `iot-challenge-3.pcap` file, which can be analysed using Wireshark. As usual, I use a simple `strings` command first to check for anything interesting:
-```
+```TXT
 Galaxy S7 edge
 _tk
 Bro: Dude did u ate my chips
@@ -566,7 +564,7 @@ Now that we know how to filter the relevant packets, we need to extract the data
 | `-e <field>`                                               | field to print if -Tfields selected (e.g. tcp.port) |
 
 Thus, data can be extracted using the command:
-```
+```bash
 tshark -r iot-challenge-3.pcap -T -Y "frame.len>14 && btatt.handle==0x008f" -e "btatt.value"
 ```
 
@@ -602,7 +600,7 @@ for line in lines:
 ```
 
 We end up with the following messages, which do not seem to be important:
-```
+```TXT
 Bro: Dude did u ate my chips
 (Too cool 4 u) TK: Emma owes me $36 for the dinner
 Boss: I will not be in the office
@@ -631,7 +629,7 @@ Boss: WELL??
 ```
 
 We also end up with the following executable, which can be identified using `file <ELF_FILE>`:
-```
+```TXT
 ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux-armhf.so.3, for GNU/Linux 2.6.32, BuildID[sha1]=d73f4011dd87812b66a3128e7f0cd1dcd813f543, not stripped
 ```
 
@@ -961,7 +959,7 @@ Common sense tells us to scan the barcode on the image. Using barcode scanning a
 
 > 2020:10:25
 
-The common tool to use when we analyze this image is `exiftool`. This can give us metadata about the image such as time and location. However, time is pretty much out of the question as the file had to be downloaded, likely altering the creation and modification timestamps. 
+The common tool to use when we analyze this image is `exiftool`. This can give us metadata about the image such as time and location. However, time is pretty much out of the question as seen from the last modified time being 4 December 2020 close to midnight which was when I downloaded the file. 
 
 ```bash
 $ exiftool osint-challenge-6.jpg
@@ -1501,7 +1499,7 @@ Using a proxy like ZAP allows us to inspect the request further. We notice that 
 
 Extracting the access token, we can view its contents either by manually decoding the base64, using an online tool such as [jwt.io](https://jwt.io) or using any [tool](https://github.com/ticarpi/jwt_tool) of your choice.
 
-```
+```TXT
 =====================
 Decoded Token Values:
 =====================
@@ -1527,10 +1525,13 @@ For tokens using `HS256`, the key is meant to be kept secret, whereas with RS256
 To download, the public key, we can simply append `/public.pem` to the back of the url. Now we just need to change the contents which is simple base64 encoding and sign the token with `public.pem`. 
 
 Since I'm lazy to code and there are already many existing tools on github for JWTs I just used this tool to sign the token. Our tampered jwt looks like this:
-`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1pbmlvbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTYwNzUzNDg3NX0.Unoy8MAMqqoEqqLVWf5DQ6_oljR1L9f8oahKA9Zp8SQ`
+
+```TXT
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1pbmlvbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTYwNzUzNDg3NX0.Unoy8MAMqqoEqqLVWf5DQ6_oljR1L9f8oahKA9Zp8SQ
+```
 
 Its decoded contents:
-```
+```TXT
 =====================
 Decoded Token Values:
 =====================
