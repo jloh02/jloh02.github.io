@@ -14,16 +14,19 @@ Position: 12
 Score: 3726/5826
 
 <img src="/images/CTF/timisoara-quals-2019/scoreboard.png" alt>
+
 ## John
 Well I only solved one challenge that required some form of brain, so here goes.
 
-We're given an ["image"](https://github.com/jloh02/jloh02.github.io/blob/master/files/CTF/timisoara-quals-2019/john.png). Running `file`, we realize it's not even a proper PNG. Since we're told it's a png, the bytes are probably encrypted. In that case, let's take a look in a hex editor.
+### Initial Analysis
+We're given an ["image"](https://github.com/jloh02/jloh02.github.io/blob/master/files/CTF/timisoara-quals-2019/john.png). Running `file`, we realize it's not even a proper PNG due to the magic bytes/file signature. Since we're told it's a png, the bytes are probably encrypted. In that case, let's take a look in a hex editor.
 
 <img class="image normal" src="/images/CTF/timisoara-quals-2019/HexEditJohn.png" alt>
 
-If we were to scroll all the way down, all PNGs are supposed to end with `\x00\x00\x00\x00IEND`, instead we see `\x7A\x7A\x7A\x7A\x33\x3f\x34\x3e`. At first we thought it was a caesar cipher. But the differences between ASCII values of `\x33` and `I` was not the same as `\x3f` and `E`.
+If we were to scroll all the way down, all PNGs are supposed to end with `\x00\x00\x00\x00IEND`, instead we see `\x7A\x7A\x7A\x7A\x33\x3f\x34\x3e`. 
 
-However for all 4 bytes `\x7A` to be `\x00`, we will turn to one of our basics of encryption - XOR. We used the script below to XOR all bytes in the image.
+### Decrypting the PNG
+At first we thought it was a caesar cipher. But the differences between ASCII values of `\x33` and `I` was not the same as `\x3f` and `E`. However, for all 4 bytes `\x7A` to be `\x00`, we will turn to one of our basics of encryption - XOR. We used the script below to XOR all bytes in the image.
 
 ``` python
 x = [chr(int(pngHexStream[i:i+2],16)^0x7a) for i in range(0, len(he), 2)]
@@ -36,6 +39,7 @@ After that we get an image that we can open ... sort of.
 
 <img class="image normal" src="/images/CTF/timisoara-quals-2019/new.png" alt>
 
+### Retrieving the Flag
 The image is partially corrupted. Let's scroll through the hex dump again.
 
 <img class="image normal" src="/images/CTF/timisoara-quals-2019/HexEditNew.png" alt>
@@ -50,5 +54,4 @@ for i in inp:
 print (output)
 ```
 
-
-Flag: `TIMCTF{Brav0_j0hnule!}`
+**Flag:** `TIMCTF{Brav0_j0hnule!}`
