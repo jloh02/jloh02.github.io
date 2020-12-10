@@ -249,4 +249,8 @@
 		}
 	}
 
+	li ul{ //Custom for ul inside li to not leave spaces
+		margin: 0 0 0 0;
+	}
+
 	@include color-list;
