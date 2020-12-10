@@ -222,7 +222,7 @@ From experience, we can see 2 suspicious processes `notepad` (commonly used as a
 #### Analyzing chrome.exe
 To analyze a Google Chrome history, we can use the `filescan` and `dumpfiles` plugins, followed by using `sqlitebrowser` to view the chrome history. More can be read up on part 9 in [this writeup](https://medium.com/hackstreetboys/hsb-presents-otterctf-2018-memory-forensics-write-up-c3b9e372c36c). 
 
-Alternatively, we can install the `chromehistory` plugin from https://github.com/superponible/volatility-plugins. If your volatility was compiled from source, you can copy the plugin files into `volatility/volatility/plugins` rather than passing the `--plugins=<directory>` argument. This makes it easier to install plugins though it can get very messy if you wish to uninstall them so I only advise to do this if you really want the convenience of installing plugins which you KNOW work.
+Alternatively, we can install the `chromehistory` plugin from <https://github.com/superponible/volatility-plugins>. If your volatility was compiled from source, you can copy the plugin files into `volatility/volatility/plugins` rather than passing the `--plugins=<directory>` argument. This makes it easier to install plugins though it can get very messy if you wish to uninstall them so I only advise to do this if you really want the convenience of installing plugins which you KNOW work.
 
 Most of the websites here are fluff as one could tell from random Google searches and going to STACK conference website homepage. However, 2 lines caught my attention:
 ```bash
@@ -245,7 +245,7 @@ After some thought, I noticed that it was a line of colored pixels, followed by 
 
 ![](https://i.imgur.com/zAMgSnJ.png)
 
-To convert the image to RGB values, one could simple search PNG to RGB and find [this website](https://convertio.co/png-rgb/). Opening the output file in a hex editor or simply running the UNIX `cat` on the it would produce the flag.
+To convert the image to RGB values, one could simple search PNG to RGB and find [this website](https://convertio.co/png-rgb/). Opening the output file in a hex editor or simply running `cat` on the it would produce the flag.
 
 However, the real technical term for a similar file is a bitmap (.BMP). An uncompressed bitmap file represents its bits in RGB but in 3 byte [little endian](https://en.wikipedia.org/wiki/Endianness) (BGR instead of RGB) which may make it harder to read. Nonetheless, using a hex editor, one can decode the flag after converting from PNG to BMP as well.
 
@@ -277,22 +277,22 @@ Points: 1692<br>
 Solves: 26
 
 #### Challenge Description
->We found a voice recording in one of the forensic images but we have no clue what's the voice recording about. Are you able to help?
+> We found a voice recording in one of the forensic images but we have no clue what's the voice recording about. Are you able to help?
 
 #### Initial Analysis
-We are given a WAV audio file. Sometimes, the spectrogram contains text as seen from previous CTF experience. Using Audacity, the spectrogram of the WAV file can be viewed. To open the spectrogram, click the dropdown arrow on the left panel beside the file name.
+We are given a WAV audio file. With our limited knowledge of WAV stegnography, we had to rely on previous CTF experience. First we analyze the spectrogram. Using Audacity, the spectrogram of the WAV file can be viewed. To open the spectrogram in Audacity, click the dropdown arrow on the left panel beside the file name.
 
 ![](https://i.imgur.com/i092acV.jpg)
 
 `aHR0cHM6Ly9wYXN0ZWJpbi5jb20vakVUajJ1VWI=`
 
-The text found is a base64 text as seen from the variation of letters used and the `=` padding to ensure the length is a multiple of 4. After decoding it (using https://base64decode.org or `base64` tool), we find a pastebin link (https://pastebin.com/jETj2uUb) which contains the text below.
+The text found is a base64 text as seen from the variation of letters used and the `=` padding to ensure the length is a multiple of 4. After decoding it (using <https://base64decode.org> or `base64` tool), we find a pastebin link (<https://pastebin.com/jETj2uUb>) which contains the text below.
 
-```brainfuck
+```
 ++++++++++[>+>+++>+++++++>++++++++++<<<<-]>>>>++++++++++++++++.------------.+.++++++++++.----------.++++++++++.-----.+.+++++..------------.---.+.++++++.-----------.++++++.
 ```
 
-This is code written in the brainf*ck programming language, notorious for its minimalism. Running this code on an [online compiler](https://copy.sh/brainfuck/) yields the text `thisisnottheflag`. Welp, looks like a dead end.
+This is code written in the brainf*ck programming language, notorious for its minimalism. Running this code on an [online compiler](<https://copy.sh/brainfuck/>) yields the text `thisisnottheflag`. Welp, looks like a dead end.
 
 #### Back to the WAV file
 After awhile, due to the challenge title not being sufficiently clear, the following hint was given: `Xiao wants to help. Will you let him help you?`. Xiao is a reference to Xiao Steganography. Steganography is a method used for hiding information in files, in this case, WAV files. Using a [Xiao Steganography decoder](https://download.cnet.com/Xiao-Steganography/3000-2092_4-10541494.html), we notice that there is a ZIP file hidden in the WAV file. 
@@ -928,6 +928,233 @@ Solves: 11
 ### A to Z of COViD!
 Points: 1986<br>
 Solves: 5
+
+#### Challenge Description
+> Over here, members learn all about COViD, and COViD wants to enlighten everyone about the organisation. Go on, read them all!
+>
+> **Flag Format:** `govtech-csg{alphanumeric-and-special-characters-string`
+
+#### Initial Analysis
+This challenge to the activity launched by `CovidInfoActivity.java`. Launching the activity in an emulator, the following screen is displayed:
+
+![](https://i.imgur.com/5wY8QST.jpg)
+
+The text field asks for the flag, and upon submission, displays a toast showing `Flag is wrong!`. We now know the flag entered is most probably checked in the `onClick()` function of the submit button.
+
+Using [JADX](https://github.com/skylot/jadx), we can obtain the decompiled Java source code of the apk. As mentioned above, we look for the `onClick()` function in `CovidInfoActivity.java`:
+```java
+public void onClick(View v) {
+    if (this.f2970b.encryptOrNull(((EditText) CovidInfoActivity.this.findViewById(R.id.editText_enteredFlag)).getText().toString()).replaceAll("\\n", BuildConfig.FLAVOR).equalsIgnoreCase(CovidInfoActivity.this.f2969b)) {
+        c.a builder = new c.a(CovidInfoActivity.this);
+        View view = LayoutInflater.from(CovidInfoActivity.this).inflate(R.layout.custom_alert, (ViewGroup) null);
+        ((TextView) view.findViewById(R.id.title)).setText("Congrats!");
+        ((TextView) view.findViewById(R.id.alert_detail)).setText("Well done!");
+        f.a.a.a.a.e.b.a().d(true);
+        builder.h("Proceed", new DialogInterface$OnClickListenerC0073a());
+        builder.f("Close", new b());
+        builder.k(view);
+        builder.l();
+        Toast.makeText(CovidInfoActivity.this.getApplicationContext(), "Flag is correct!", 0).show();
+        return;
+    }
+    Toast.makeText(CovidInfoActivity.this.getApplicationContext(), "Flag is wrong!", 0).show();
+}
+```
+
+Our entered flag is retrieved by the activity using:
+```java
+CovidInfoActivity.this.findViewById(R.id.editText_enteredFlag)).getText().toString()
+```
+
+It is then encrypted using a function named `encryptOrNull()`, before being compared to `CovidInfoActivity.this.f2969b`. By looking at the code in the same file, we see the following relevant code:
+```java
+public String f2969b = "jeldexs+ktquD8iQ1CAEnHIc+SSPc5TcyirRSIYxA/g=";
+```
+
+```java
+import se.simbio.encryption.Encryption;
+
+public final Encryption f2970b;
+public a(Encryption encryption) {
+	this.f2970b = encryption;
+}
+```
+
+`CovidInfoActivity.this.f2969b` refers to the flag after it is encrypted using  `encryptOrNull()`. We also see that `encryptOrNull()` is a function imported from `Encryption.java`,  another Java file in the apk. Thus, we take a closer look at that file:
+
+```java
+public String encryptOrNull(String data) {
+    try {
+        return encrypt(data);
+    } catch (Exception e2) {
+        e2.printStackTrace();
+        return null;
+    }
+}
+```
+
+The `encryptOrNull()` function calls another function `encrypt()`, which calls more functions and so on... Manually reversing the code through static analysis seems too tedious, thus we look for another method. Scrolling through `Encryption.java`, we see there is a function named `decryptOrNull()`:
+
+```java
+public String decryptOrNull(String data) {
+    try {
+        return decrypt(data);
+    } catch (Exception e2) {
+        e2.printStackTrace();
+        return null;
+    }
+}
+```
+
+Seeing that it is similar to `encryptOrNull()`, it is same to assume this function decrypts data passed into it. As we have the encrypted flag, we just need to find a way to pass it into `decryptOrNull()` and obtain the output.
+
+#### Patching the APK
+As mentioned above, we want to call `decryptOrNull()` on the encrypted flag to get the flag. This would be possible with [Frida](https://frida.re/), however, I chose to patch the apk as that was more familiar to me.
+
+To obtain the smali code of the apk, we use [ApkTool](https://ibotpeaches.github.io/Apktool/):
+
+```bash
+apktool -r d mobile-challenge.apk -o <OUTPUT_DIR>
+```
+
+As the relevant code in Java is in `CovidActivity.java`, we look for the smali files related to that. The `OnClick()` function is found in `CovidInfoActivity$a.smali`:
+```
+.method public onClick(Landroid/view/View;)V
+	.locals 11
+    .param p1, "v"    # Landroid/view/View;
+	
+	...
+```
+
+Before diving into patching the code, we identify what we need to do:
+* Call `decryptOrNull()` on input entered by us
+* Display the output in the apk
+
+Fortunately, smali code is similar to assembly, making it easier for me to identify the code parts I needed to patch.
+
+##### Smali Code Analysis
+
+By analyzing the smali code, we see that `encryptOrNull()` is called on our input, and the encrypted input is stored in the variable `v2`:
+```
+.line 48
+.local v1, "enteredFlagString":Ljava/lang/String;
+iget-object v2, p0, Lsg/gov/tech/ctf/mobile/Info/CovidInfoActivity$a;->b:Lse/simbio/encryption/Encryption;
+
+invoke-virtual {v2, v1}, Lse/simbio/encryption/Encryption;->encryptOrNull(Ljava/lang/String;)Ljava/lang/String;
+
+move-result-object v2
+```
+
+The encrypted flag is then fetched and stored in `v3`, and compared to our encrypted input in `v2`. The code then jumps to `:cond_0` if they are not equal:
+
+```
+.line 51
+iget-object v3, p0, Lsg/gov/tech/ctf/mobile/Info/CovidInfoActivity$a;->c:Lsg/gov/tech/ctf/mobile/Info/CovidInfoActivity;
+
+iget-object v3, v3, Lsg/gov/tech/ctf/mobile/Info/CovidInfoActivity;->b:Ljava/lang/String;
+
+invoke-virtual {v2, v3}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+
+move-result v3
+
+const/4 v4, 0x0
+
+if-eqz v3, :cond_0
+```
+
+We see that `:cond_0` displays `Flag is wrong!` in a toast, hence we do not want to jump to `:cond_0`:
+```
+.line 86
+:cond_0
+iget-object v3, p0, Lsg/gov/tech/ctf/mobile/Info/CovidInfoActivity$a;->c:Lsg/gov/tech/ctf/mobile/Info/CovidInfoActivity;
+
+invoke-virtual {v3}, Landroid/app/Activity;->getApplicationContext()Landroid/content/Context;
+
+move-result-object v3
+
+const-string v5, "Flag is wrong!"
+
+invoke-static {v3, v5, v4}, Landroid/widget/Toast;->makeText(Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;
+
+move-result-object v3
+
+invoke-virtual {v3}, Landroid/widget/Toast;->show()V
+```
+
+Should the code not jump to `:cond_0`, it displays a Congratulations message:
+```
+.line 57
+.local v7, "details":Landroid/widget/TextView;
+const-string v8, "Congrats!"
+
+invoke-virtual {v6, v8}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+```
+
+A more in-depth explanation:
+* `equalsIgnoreCase`  is similar to `cmp` assembly. It returns true (1) if both strings are equal, else it returns false (0). The result is then stored in `v3`
+* `if-eqz`, similar to `jz` in assembly, jumps to `cond_0` if the value stored in `v3` is equal to 0.
+* This allows the app to jump to `cond_0` and display `Flag is wrong!` when the input entered is not equal to the flag.
+
+##### Patching Smali Code
+With the smali code snippets above, we can actually patch the apk to give us the flag:
+* Call `decryptOrNull()` instead of `encryptOrNull()` on input of the  `editText`.
+* Jump to `:cond_0` when input is **equal** to the flag, instead of when the flag is wrong. This would allow us to see the congratulations window when we enter a wrong flag instead of a correct one.
+* Patch the code to display the output from `decryptOrNull()` instead of `Congrats!` in the congratulations window.
+
+To call `decryptOnNull()` instead, we simply change the function call in `.line 48` :
+```
+# From:
+invoke-virtual {v2, v1}, Lse/simbio/encryption/Encryption;->encryptOrNull(Ljava/lang/String;)Ljava/lang/String;
+
+# Changed to:
+invoke-virtual {v2, v1}, Lse/simbio/encryption/Encryption;->decryptOrNull(Ljava/lang/String;)Ljava/lang/String;
+```
+
+In `.line 51`, we find the instruction opposite of `if-eqz`, which is `if-nez`, and make the change:
+```
+# From:
+if-eqz v3, :cond_0
+
+# Changed to:
+if-nez v3, :cond_0
+```
+
+The return value of `decryptOrNull()` is stored in `v2`, while the `Congrats!` message is stored in `v8`. We make the appropriate changes to `.line 57`:
+```
+# From:
+invoke-virtual {v6, v8}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+
+# Changed to:
+invoke-virtual {v6, v2}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+```
+
+##### Building patched APK
+To build the apk from smali code, we use `apktool`:
+```bash
+apktool b <OUTPUT_DIR>
+```
+
+To sign the apk, we follow the steps in [this post](https://stackoverflow.com/questions/10930331/how-to-sign-an-already-compiled-apk):
+* Create a key using:
+```bash
+keytool -genkey -v -keystore my-release-key.keystore -alias alias_name -keyalg RSA -keysize 2048 -validity 10000
+```
+
+* Sign the apk with:
+```bash
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.keystore mobile-challenge.apk alias_name
+```
+
+##### Flag
+We install the patched APK on an emulator and run it normally. Instead of entering the flag in the Info Page, we key in the encrypted flag:
+
+![](https://i.imgur.com/7yaWgHV.png)
+
+This displays the congratulations window with the flag:
+
+![](https://i.imgur.com/OQ5Bo7x.png)
+
+**Flag:** `govtech-csg{1 L0V3 y0U 3oO0}`
 
 ### Task, task, task!
 Points: 1990<br>
