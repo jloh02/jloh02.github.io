@@ -76,7 +76,6 @@ There doesn't seem to be any obvious way to find out the leaking bucket. So we d
 
 ![](https://i.imgur.com/H499XQt.png)
 
-
 Visiting the company site, we are greeted with a word cloud. The most obvious solution was to use these words in the word cloud, however, we couldn't find the bucket with that alone (if only it were that simple...)
 
 At this stage, we thought we needed to come up with our own words. To facilitate this I uploaded the script to our team EC2 instance which we set up in preparation for this ctf. There, we just kept adding words that we thought of including text from images on the website. With the new wordlist, we ran the script again. 
@@ -768,12 +767,12 @@ Dump of assembler code for function magic:
 End of assembler dump.
 ```
 In `x86 ARM` architecture, return values are stored in registers (`r0` in this case). We set a breakpoint right before `magic()` ends, with the following:
-```
+```bash
 (gdb) b *magic+84
 Breakpoint 1 at 0x1081c
 ```
 As we want to print the value stored in `r0` as a character everytime the breakpoint is hit, we can use the `define hook-stop` command:
-```
+```bash
 (gdb) define hook-stop
 Type commands for definition of "hook-stop".
 End with a line saying just "end".
@@ -782,7 +781,7 @@ End with a line saying just "end".
 ```
 
 We then continue execution three times until the character printed is no longer correct. 
-```
+```bash
 (gdb) c
 Continuing.
 $8 = 97 'a'
@@ -811,7 +810,7 @@ if ( buf[3] == magic(2 * buf[1] - 51) ) ++i;
 
 Thus, we restart execution and enter `aNtaaaa` as input:
 _In gdb terminal window_
-```
+```bash
 (gdb) kill
 Kill the program being debugged? (y or n) y
 [Inferior 1 (process 1) killed]
@@ -821,13 +820,13 @@ Remote debugging using localhost:1234
 ```
 
 _In other terminal window_
-```
+```bash
  $ qemu-arm -g 1234 ./elf_file
  Secret?aNtaaaa
  ```
  
  This allows us to obtain more correct characters in **gdb**:
- ```
+ ```bash
  (gdb) c
 Continuing.
 $13 = 97 'a'
@@ -861,7 +860,7 @@ Breakpoint 1, 0x0001081c in magic ()
 ```
 
 We repeat the process, which gives us the entire flag before the program terminates:
-```
+```bash
 (gdb) c
 Continuing.
 $21 = 97 'a'
@@ -905,7 +904,7 @@ No registers
 ```
 
 The above shows us the secret pass is `aNtiB!e`. Let us check:
-```
+```bash
 $ qemu-arm elf_file
 Secret?aNtiB!e
 Authorised!
@@ -964,7 +963,7 @@ Common sense tells us to scan the barcode on the image. Using barcode scanning a
 
 The common tool to use when we analyze this image is `exiftool`. This can give us metadata about the image such as time and location. However, time is pretty much out of the question as the file had to be downloaded, likely altering the creation and modification timestamps. 
 
-```
+```bash
 $ exiftool osint-challenge-6.jpg
 ExifTool Version Number         : 11.88
 File Name                       : osint-challenge-6.jpg
@@ -1077,17 +1076,45 @@ We can use Google Street View to look at bus stops near these locations. Keep in
 Points: 790<br>
 Solves: 29
 
-view page source
-found comment left by dev
-followed search for @joshhxy on gitlab
-found his user and viewed his activity
-we were searching for any suspicious repo but none of them seemed to have anything
-most of his repos were newly created with just a simple readme
-seemed like a dead end 
-then we read one of the commits
-it said stuff about private repo
-then we realised that we were simply not able to view it
-in that same message also lied the repo name which was all we needed 
+##### Challenge Description  
+> The lead Smart Nation engineer is missing! He has not responded to our calls for 3 days and is suspected to be kidnapped! Can you find out some of the projects he has been working on? Perhaps this will give us some insights on why he was kidnapped…maybe some high-value projects! This is one of the latest work, maybe it serves as a good starting point to start hunting.
+> 
+> Flag is the repository name!
+> 
+> Developer's Portal - STACK the Flags
+ 
+Opening the link provided, there is nothing that stands out at first glance. Since the flag is a repository name, we know we have to find some sort of clue that is related. Perhaps there is something we can find in the page source. 
+
+After slowly analyzing the page source, we find a html comment left by the devs.
+
+```html
+<a href="https://ctf.tech.gov.sg/">
+  <h3 style="text-align: center;">Check out STACK the Flags here!</h3>
+</a>
+
+<!-- Will fork to our gitlab - @joshhky -->
+
+    <p>
+      <em>
+        Last updated 04 December 2020
+      </em>
+    </p>
+  </div>
+</div>
+```
+
+Hmm... Let's follow the path and search for @joshhky on gitlab. We can view his profile on gitlab using this [link](https://gitlab.com/joshhky). We can confirm that we are on the right path as we see several projects with "KoroVax" in them, suggesting that this user was indeed created for the purpose of the CTF. 
+
+At this stage, we viewed all the repositories and projects he created/imported trying to find any clues. However, majority of them were empty. The only anomaly out of his entire activity was the commit which contained changes in the project README. We can  
+click on the commit ID to view more details about it. 
+
+![](https://i.imgur.com/mlINEyj.png)
+
+Upon closer inspection, we see that in the Todo, there is a point about how not all repositories should be public. From this, we can guess that the repository that we are searching for is private. However, just above that, there is also another point which notes that Josh (our target) is in charge of `krs-admin-portal`. This seems suspicious. Perhaps it may be a repository name? No harm trying right?
+
+After wrapping it in the flag format, we try to submit the flag and... it was correct after all :)
+
+**Flag:** `govtech-csg{krs-admin-portal}`
 
 
 ### Where was he kidnapped?
