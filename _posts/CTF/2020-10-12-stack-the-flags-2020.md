@@ -12,8 +12,6 @@ image: "/images/CTF/stack-the-flags-2020/logo.png"
 <!-- TOC depthTo:3 -->
 
 - [Overview](#overview)
-- [Binary Exploitation](#binary-exploitation)
-	- [Beta Reporting System](#beta-reporting-system)
 - [Cloud](#cloud)
 	- [Find the leaking bucket!](#find-the-leaking-bucket)
 - [Cryptography](#cryptography)
@@ -25,16 +23,11 @@ image: "/images/CTF/stack-the-flags-2020/logo.png"
 	- [COVID's Communication Technology!](#covids-communication-technology)
 	- [I smell updates!](#i-smell-updates)
 - [Mobile](#mobile)
-	- [What's with the Search!](#whats-with-the-search)
-	- [All about Korovax!](#all-about-korovax)
-	- [True or false?](#true-or-false)
 	- [A to Z of COViD!](#a-to-z-of-covid)
-	- [Task, task, task!](#task-task-task)
 - [Open Source Intelligence (OSINT)](#open-source-intelligence-osint)
 	- [Only time will tell!](#only-time-will-tell)
 	- [Sounds of freedom!](#sounds-of-freedom)
 	- [What is he working on? Some high value project?](#what-is-he-working-on-some-high-value-project)
-	- [Where was he kidnapped?](#where-was-he-kidnapped)
 	- [Hunt him down!](#hunt-him-down)
 	- [Who are the possible kidnappers?](#who-are-the-possible-kidnappers)
 - [Social Engineering](#social-engineering)
@@ -54,12 +47,6 @@ Score: 37754
 
 ![](https://i.imgur.com/gxuIIs9.jpg)
 
-## Binary Exploitation
-### Beta Reporting System
-Points: 994<br>
-Solves: 4<br>
-@MiloTruck 
-
 ## Cloud
 ### Find the leaking bucket!
 Points: 978<br>
@@ -72,7 +59,7 @@ Solves: 12
 > Do what you can! Find that hidden S3 bucket (in the format “word1-word2-s4fet3ch”) and find out what was exfiltrated!
 
 #### Solution
-There doesn't seem to be any obvious way to find out the leaking bucket. So we decided to brute force to find out. With only 2 words to guess, brute force doesn't seem unreasonable, taking worst case of $n^2$ tries where $n$ is the number of words in our wordlist. 
+There doesn't seem to be any obvious way to find out the leaking bucket. So we decided to brute force to find out. With only 2 words to guess, brute force doesn't seem unreasonable, taking worst case of $$n^2$$ tries where $$n$$ is the number of words in our wordlist. 
 
 ![](https://i.imgur.com/H499XQt.png)
 
@@ -168,7 +155,7 @@ We are given a `.mem` file (Memory dump). We can use the premier tool for memory
 For those who are using volatility for your first time, the format for each command is `vol -f <file> <plugin/command>`
 
 From previous CTFs, I follow a standard procedure (assuming it is a Windows machine which is typical of many CTFs), running `imagescan` then `pslist`. This is a very good starting point as it gives an idea of the machine profile. Think of profiles as a type of Windows machine (ie Windows7, WindowsXP, etc). 
-```
+```bash
 $ vol -f forensics-challenge-1.mem imageinfo
 Volatility Foundation Volatility Framework 2.6.1
 INFO    : volatility.debug    : Determining profile based on KDBG search...
@@ -178,7 +165,7 @@ INFO    : volatility.debug    : Determining profile based on KDBG search...
 .
 ```
 We can choose the first suggested profile, then run `pslist` to check that the profile chosen works well. Remember to append `--profile=<chosen_profile>` in each volatility command now. `pslist` would return the entire process list.
-```
+```bash
 $ vol -f forensics-challenge-1.mem --profile=Win7SP1x64 pslist
 Volatility Foundation Volatility Framework 2.6.1
 Offset(V)          Name                    PID   PPID   Thds     Hnds   Sess  Wow64 Start                          Exit
@@ -222,10 +209,10 @@ From experience, we can see 2 suspicious processes `notepad` (commonly used as a
 #### Analyzing chrome.exe
 To analyze a Google Chrome history, we can use the `filescan` and `dumpfiles` plugins, followed by using `sqlitebrowser` to view the chrome history. More can be read up on part 9 in [this writeup](https://medium.com/hackstreetboys/hsb-presents-otterctf-2018-memory-forensics-write-up-c3b9e372c36c). 
 
-Alternatively, we can install the `chromehistory` plugin from https://github.com/superponible/volatility-plugins. If your volatility was compiled from source, you can copy the plugin files into `volatility/volatility/plugins` rather than passing the `--plugins=<directory>` argument. This makes it easier to install plugins though it can get very messy if you wish to uninstall them so I only advise to do this if you really want the convenience of installing plugins which you KNOW work.
+Alternatively, we can install the `chromehistory` plugin from <https://github.com/superponible/volatility-plugins>. If your volatility was compiled from source, you can copy the plugin files into `volatility/volatility/plugins` rather than passing the `--plugins=<directory>` argument. This makes it easier to install plugins though it can get very messy if you wish to uninstall them so I only advise to do this if you really want the convenience of installing plugins which you KNOW work.
 
 Most of the websites here are fluff as one could tell from random Google searches and going to STACK conference website homepage. However, 2 lines caught my attention:
-```
+```bash
 $ vol -f forensics-challenge-1.mem --profile=Win7SP1x64 chromehistory
 .
 .
@@ -245,14 +232,14 @@ After some thought, I noticed that it was a line of colored pixels, followed by 
 
 ![](https://i.imgur.com/zAMgSnJ.png)
 
-To convert the image to RGB values, one could simple search PNG to RGB and find [this website](https://convertio.co/png-rgb/). Opening the output file in a hex editor or simply running the UNIX `cat` on the it would produce the flag.
+To convert the image to RGB values, one could simple search PNG to RGB and find [this website](https://convertio.co/png-rgb/). Opening the output file in a hex editor or simply running `cat` on the it would produce the flag.
 
 However, the real technical term for a similar file is a bitmap (.BMP). An uncompressed bitmap file represents its bits in RGB but in 3 byte [little endian](https://en.wikipedia.org/wiki/Endianness) (BGR instead of RGB) which may make it harder to read. Nonetheless, using a hex editor, one can decode the flag after converting from PNG to BMP as well.
 
 > vogcetc-h{gsm3myr03R_rGdn33ulB}z3
 
 Yet another alternative, if you are more familiar with tools, is to use [zsteg](https://github.com/zed-0xff/zsteg) which is able to produce different steganographic outputs, including lowest significant bit (LSB) and RGB bytes.
-```
+```bash
 $ zsteg -a image.png
 b8,r,lsb,xy         .. text: "gthsm0_d3B3"
 b8,g,lsb,xy         .. text: "oe-g3rRG3lz"
@@ -277,27 +264,26 @@ Points: 1692<br>
 Solves: 26
 
 #### Challenge Description
->We found a voice recording in one of the forensic images but we have no clue what's the voice recording about. Are you able to help?
+> We found a voice recording in one of the forensic images but we have no clue what's the voice recording about. Are you able to help?
 
 #### Initial Analysis
-We are given a WAV audio file. Sometimes, the spectrogram contains text as seen from previous CTF experience. Using Audacity, the spectrogram of the WAV file can be viewed. To open the spectrogram, click the dropdown arrow on the left panel beside the file name.
+We are given a WAV audio file. With our limited knowledge of WAV stegnography, we had to rely on previous CTF experience. First we analyze the spectrogram. Using Audacity, the spectrogram of the WAV file can be viewed. To open the spectrogram in Audacity, click the dropdown arrow on the left panel beside the file name.
 
 ![](https://i.imgur.com/i092acV.jpg)
 
 `aHR0cHM6Ly9wYXN0ZWJpbi5jb20vakVUajJ1VWI=`
 
-The text found is a base64 text as seen from the variation of letters used and the `=` padding to ensure the length is a multiple of 4. After decoding it (using https://base64decode.org or `base64` tool), we find a pastebin link (https://pastebin.com/jETj2uUb) which contains the text below.
+The text found is a base64 text as seen from the variation of letters used and the `=` padding to ensure the length is a multiple of 4. After decoding it (using <https://base64decode.org> or `base64` tool), we find a pastebin link (<https://pastebin.com/jETj2uUb>) which contains the text below.
 
-```
+
+```brainfuck
 ++++++++++[>+>+++>+++++++>++++++++++<<<<-]>>>>++++++++++++++++.------------.+.++++++++++.----------.++++++++++.-----.+.+++++..------------.---.+.++++++.-----------.++++++.
 ```
 
-This is code written in the brainf*ck programming language, notorious for its minimalism. Running this code on an [online compiler](https://copy.sh/brainfuck/) yields the text `thisisnottheflag`. Welp, looks like a dead end.
+This is code written in the brainf*ck programming language, notorious for its minimalism. Running this code on an [online compiler](<https://copy.sh/brainfuck/>) yields the text `thisisnottheflag`. Welp, looks like a dead end.
 
 #### Back to the WAV file
-After awhile, due to the challenge title not being sufficiently clear, the following hint was given: `Xiao wants to help. Will you let him help you?`. The word "Xiao" means "crazy" in the Chinese hokkien dialect. The challenge title "Voices in the head" refers to a crazy person and hence Xiao. 
-
-Xiao is a reference to Xiao Steganography. Steganography is a method used for hiding information in files, in this case, WAV files. Using a [Xiao Steganography decoder](https://download.cnet.com/Xiao-Steganography/3000-2092_4-10541494.html), we notice that there is a ZIP file hidden in the WAV file. 
+After awhile, due to the challenge title not being sufficiently clear, the following hint was given: `Xiao wants to help. Will you let him help you?`. Xiao is a reference to Xiao Steganography. Steganography is a method used for hiding information in files, in this case, WAV files. Using a [Xiao Steganography decoder](https://download.cnet.com/Xiao-Steganography/3000-2092_4-10541494.html), we notice that there is a ZIP file hidden in the WAV file. 
 
 ![](https://i.imgur.com/dRBaVrr.png)
 
@@ -321,7 +307,7 @@ The only string we've got is `thisisnottheflag` from the brainf*ck code. When th
 #### Extracting the ZIP contents
 While attempting to extract the ZIP, a password was requested. Since trying the same password (`thisisnottheflag`) doesn't work, looks like we don't have a password this time. What if the password was stored in plaintext, such as in a comment, in the ZIP? Running `strings` would return the following:
 
-```
+```bash
 $ strings xiao.zip
 .
 .
@@ -334,7 +320,7 @@ Similar to the previous string, since they tell you that that text is NOT the fl
 
 ![](https://i.imgur.com/5xnrpdH.png)
 
-Flag: `govtech-csg{3uph0n1ou5_@ud10_ch@ll3ng3}`
+**Flag:** `govtech-csg{3uph0n1ou5_@ud10_ch@ll3ng3}`
 
 ## Internet of Things
 ### COVID's Communication Technology!
@@ -405,7 +391,7 @@ In addition, we notice that the last quarter of the data packets given are not a
 
 Using the Python script below, the bits of the data can be extracted including the headers and addresses. Thresholds for headers and timings between bits could be empirically derived from Saleae in case the transmission does not directly correspond to the original NEC IR specifications. 
 
-```python=2
+```py
 import pandas as pd
 
 # Empirically determined timings for 0s and 1s
@@ -440,7 +426,7 @@ with open('out.txt','w') as f:
 ```
 
 The output of the above script produces a text file including headers and addresses. The block below only contains one of 6 repeated instances - the message was sent 6.5 times.
-```
+```TXT
 100000000111111110000000000000000
 100000000111111110000000000000000
 100000000111111110110011101101111
@@ -461,7 +447,7 @@ The output of the above script produces a text file including headers and addres
 ```
 
 Since the address and its logical inverse is consistent throughout (only 1 destination address), the header, address and inverse address can be removed. I used a simple find and replace in a text editor to remove `10000000011111111`. The first 2 lines can also be excluded since they are null bytes.
-```
+```TXT
 0110011101101111
 0111011001110100
 0110010101100011
@@ -494,7 +480,7 @@ Solves: 5
 
 #### Initial Analysis
 We are provided with a `iot-challenge-3.pcap` file, which can be analysed using Wireshark. As usual, I use a simple `strings` command first to check for anything interesting:
-```
+```TXT
 Galaxy S7 edge
 _tk
 Bro: Dude did u ate my chips
@@ -566,7 +552,7 @@ Now that we know how to filter the relevant packets, we need to extract the data
 | `-e <field>`                                               | field to print if -Tfields selected (e.g. tcp.port) |
 
 Thus, data can be extracted using the command:
-```
+```bash
 tshark -r iot-challenge-3.pcap -T -Y "frame.len>14 && btatt.handle==0x008f" -e "btatt.value"
 ```
 
@@ -602,7 +588,7 @@ for line in lines:
 ```
 
 We end up with the following messages, which do not seem to be important:
-```
+```TXT
 Bro: Dude did u ate my chips
 (Too cool 4 u) TK: Emma owes me $36 for the dinner
 Boss: I will not be in the office
@@ -631,7 +617,7 @@ Boss: WELL??
 ```
 
 We also end up with the following executable, which can be identified using `file <ELF_FILE>`:
-```
+```TXT
 ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux-armhf.so.3, for GNU/Linux 2.6.32, BuildID[sha1]=d73f4011dd87812b66a3128e7f0cd1dcd813f543, not stripped
 ```
 
@@ -739,7 +725,7 @@ This means we can obtain the correct character at any position if we know the co
 
 _Before diving into gdb, remember that the aim is to obtain the return values of magic()_
 We use the `disas` command to obtain the disassembly of the `magic()` function:
-```asm
+```nasm
 (gdb) disas magic
 Dump of assembler code for function magic:
    0x000107c8 <+0>:     push    {r11, lr}
@@ -915,27 +901,236 @@ It is correct, hence the flag is `govtech-csg{aNtiB!e}`
 **Flag:** `govtech-csg{aNtiB!e}`
 
 ## Mobile
-### What's with the Search!
-Points: 984<br>
-Solves: 10
-
-### All about Korovax!
-Points: 984<br>
-Solves: 10
-
-### True or false?
-Points: 1962<br>
-Solves: 11
-
 ### A to Z of COViD!
 Points: 1986<br>
 Solves: 5
 
-### Task, task, task!
-Points: 1990<br>
-Solves: 3
+#### Challenge Description
+> Over here, members learn all about COViD, and COViD wants to enlighten everyone about the organisation. Go on, read them all!
+>
+> **Flag Format:** `govtech-csg{alphanumeric-and-special-characters-string`
 
-(Solved after CTF?)
+#### Initial Analysis
+This challenge to the activity launched by `CovidInfoActivity.java`. Launching the activity in an emulator, the following screen is displayed:
+
+![](https://i.imgur.com/5wY8QST.jpg)
+
+The text field asks for the flag, and upon submission, displays a toast showing `Flag is wrong!`. We now know the flag entered is most probably checked in the `onClick()` function of the submit button.
+
+Using [JADX](https://github.com/skylot/jadx), we can obtain the decompiled Java source code of the apk. As mentioned above, we look for the `onClick()` function in `CovidInfoActivity.java`:
+```java
+public void onClick(View v) {
+    if (this.f2970b.encryptOrNull(((EditText) CovidInfoActivity.this.findViewById(R.id.editText_enteredFlag)).getText().toString()).replaceAll("\\n", BuildConfig.FLAVOR).equalsIgnoreCase(CovidInfoActivity.this.f2969b)) {
+        c.a builder = new c.a(CovidInfoActivity.this);
+        View view = LayoutInflater.from(CovidInfoActivity.this).inflate(R.layout.custom_alert, (ViewGroup) null);
+        ((TextView) view.findViewById(R.id.title)).setText("Congrats!");
+        ((TextView) view.findViewById(R.id.alert_detail)).setText("Well done!");
+        f.a.a.a.a.e.b.a().d(true);
+        builder.h("Proceed", new DialogInterface$OnClickListenerC0073a());
+        builder.f("Close", new b());
+        builder.k(view);
+        builder.l();
+        Toast.makeText(CovidInfoActivity.this.getApplicationContext(), "Flag is correct!", 0).show();
+        return;
+    }
+    Toast.makeText(CovidInfoActivity.this.getApplicationContext(), "Flag is wrong!", 0).show();
+}
+```
+
+Our entered flag is retrieved by the activity using:
+```java
+CovidInfoActivity.this.findViewById(R.id.editText_enteredFlag)).getText().toString()
+```
+
+It is then encrypted using a function named `encryptOrNull()`, before being compared to `CovidInfoActivity.this.f2969b`. By looking at the code in the same file, we see the following relevant code:
+```java
+public String f2969b = "jeldexs+ktquD8iQ1CAEnHIc+SSPc5TcyirRSIYxA/g=";
+```
+
+```java
+import se.simbio.encryption.Encryption;
+
+public final Encryption f2970b;
+public a(Encryption encryption) {
+	this.f2970b = encryption;
+}
+```
+
+`CovidInfoActivity.this.f2969b` refers to the flag after it is encrypted using  `encryptOrNull()`. We also see that `encryptOrNull()` is a function imported from `Encryption.java`,  another Java file in the apk. Thus, we take a closer look at that file:
+
+```java
+public String encryptOrNull(String data) {
+    try {
+        return encrypt(data);
+    } catch (Exception e2) {
+        e2.printStackTrace();
+        return null;
+    }
+}
+```
+
+The `encryptOrNull()` function calls another function `encrypt()`, which calls more functions and so on... Manually reversing the code through static analysis seems too tedious, thus we look for another method. Scrolling through `Encryption.java`, we see there is a function named `decryptOrNull()`:
+
+```java
+public String decryptOrNull(String data) {
+    try {
+        return decrypt(data);
+    } catch (Exception e2) {
+        e2.printStackTrace();
+        return null;
+    }
+}
+```
+
+Seeing that it is similar to `encryptOrNull()`, it is same to assume this function decrypts data passed into it. As we have the encrypted flag, we just need to find a way to pass it into `decryptOrNull()` and obtain the output.
+
+#### Patching the APK
+As mentioned above, we want to call `decryptOrNull()` on the encrypted flag to get the flag. This would be possible with [Frida](https://frida.re/), however, I chose to patch the apk as that was more familiar to me.
+
+To obtain the smali code of the apk, we use [ApkTool](https://ibotpeaches.github.io/Apktool/):
+
+```bash
+apktool -r d mobile-challenge.apk -o <OUTPUT_DIR>
+```
+
+As the relevant code in Java is in `CovidActivity.java`, we look for the smali files related to that. The `OnClick()` function is found in `CovidInfoActivity$a.smali`:
+```
+.method public onClick(Landroid/view/View;)V
+	.locals 11
+    .param p1, "v"    # Landroid/view/View;
+	
+	...
+```
+
+Before diving into patching the code, we identify what we need to do:
+* Call `decryptOrNull()` on input entered by us
+* Display the output in the apk
+
+Fortunately, smali code is similar to assembly, making it easier for me to identify the code parts I needed to patch.
+
+##### Smali Code Analysis
+
+By analyzing the smali code, we see that `encryptOrNull()` is called on our input, and the encrypted input is stored in the variable `v2`:
+```
+.line 48
+.local v1, "enteredFlagString":Ljava/lang/String;
+iget-object v2, p0, Lsg/gov/tech/ctf/mobile/Info/CovidInfoActivity$a;->b:Lse/simbio/encryption/Encryption;
+
+invoke-virtual {v2, v1}, Lse/simbio/encryption/Encryption;->encryptOrNull(Ljava/lang/String;)Ljava/lang/String;
+
+move-result-object v2
+```
+
+The encrypted flag is then fetched and stored in `v3`, and compared to our encrypted input in `v2`. The code then jumps to `:cond_0` if they are not equal:
+
+```
+.line 51
+iget-object v3, p0, Lsg/gov/tech/ctf/mobile/Info/CovidInfoActivity$a;->c:Lsg/gov/tech/ctf/mobile/Info/CovidInfoActivity;
+
+iget-object v3, v3, Lsg/gov/tech/ctf/mobile/Info/CovidInfoActivity;->b:Ljava/lang/String;
+
+invoke-virtual {v2, v3}, Ljava/lang/String;->equalsIgnoreCase(Ljava/lang/String;)Z
+
+move-result v3
+
+const/4 v4, 0x0
+
+if-eqz v3, :cond_0
+```
+
+We see that `:cond_0` displays `Flag is wrong!` in a toast, hence we do not want to jump to `:cond_0`:
+```
+.line 86
+:cond_0
+iget-object v3, p0, Lsg/gov/tech/ctf/mobile/Info/CovidInfoActivity$a;->c:Lsg/gov/tech/ctf/mobile/Info/CovidInfoActivity;
+
+invoke-virtual {v3}, Landroid/app/Activity;->getApplicationContext()Landroid/content/Context;
+
+move-result-object v3
+
+const-string v5, "Flag is wrong!"
+
+invoke-static {v3, v5, v4}, Landroid/widget/Toast;->makeText(Landroid/content/Context;Ljava/lang/CharSequence;I)Landroid/widget/Toast;
+
+move-result-object v3
+
+invoke-virtual {v3}, Landroid/widget/Toast;->show()V
+```
+
+Should the code not jump to `:cond_0`, it displays a Congratulations message:
+```
+.line 57
+.local v7, "details":Landroid/widget/TextView;
+const-string v8, "Congrats!"
+
+invoke-virtual {v6, v8}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+```
+
+A more in-depth explanation:
+* `equalsIgnoreCase`  is similar to `cmp` assembly. It returns true (1) if both strings are equal, else it returns false (0). The result is then stored in `v3`
+* `if-eqz`, similar to `jz` in assembly, jumps to `cond_0` if the value stored in `v3` is equal to 0.
+* This allows the app to jump to `cond_0` and display `Flag is wrong!` when the input entered is not equal to the flag.
+
+##### Patching Smali Code
+With the smali code snippets above, we can actually patch the apk to give us the flag:
+* Call `decryptOrNull()` instead of `encryptOrNull()` on input of the  `editText`.
+* Jump to `:cond_0` when input is **equal** to the flag, instead of when the flag is wrong. This would allow us to see the congratulations window when we enter a wrong flag instead of a correct one.
+* Patch the code to display the output from `decryptOrNull()` instead of `Congrats!` in the congratulations window.
+
+To call `decryptOnNull()` instead, we simply change the function call in `.line 48` :
+```
+# From:
+invoke-virtual {v2, v1}, Lse/simbio/encryption/Encryption;->encryptOrNull(Ljava/lang/String;)Ljava/lang/String;
+
+# Changed to:
+invoke-virtual {v2, v1}, Lse/simbio/encryption/Encryption;->decryptOrNull(Ljava/lang/String;)Ljava/lang/String;
+```
+
+In `.line 51`, we find the instruction opposite of `if-eqz`, which is `if-nez`, and make the change:
+```
+# From:
+if-eqz v3, :cond_0
+
+# Changed to:
+if-nez v3, :cond_0
+```
+
+The return value of `decryptOrNull()` is stored in `v2`, while the `Congrats!` message is stored in `v8`. We make the appropriate changes to `.line 57`:
+```
+# From:
+invoke-virtual {v6, v8}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+
+# Changed to:
+invoke-virtual {v6, v2}, Landroid/widget/TextView;->setText(Ljava/lang/CharSequence;)V
+```
+
+##### Building patched APK
+To build the apk from smali code, we use `apktool`:
+```bash
+apktool b <OUTPUT_DIR>
+```
+
+To sign the apk, we follow the steps in [this post](https://stackoverflow.com/questions/10930331/how-to-sign-an-already-compiled-apk):
+* Create a key using:
+```bash
+keytool -genkey -v -keystore my-release-key.keystore -alias alias_name -keyalg RSA -keysize 2048 -validity 10000
+```
+
+* Sign the apk with:
+```bash
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.keystore mobile-challenge.apk alias_name
+```
+
+##### Flag
+We install the patched APK on an emulator and run it normally. Instead of entering the flag in the Info Page, we key in the encrypted flag:
+
+![](https://i.imgur.com/7yaWgHV.png)
+
+This displays the congratulations window with the flag:
+
+![](https://i.imgur.com/OQ5Bo7x.png)
+
+**Flag:** `govtech-csg{1 L0V3 y0U 3oO0}`
 
 ## Open Source Intelligence (OSINT)
 ### Only time will tell!
@@ -961,7 +1156,7 @@ Common sense tells us to scan the barcode on the image. Using barcode scanning a
 
 > 2020:10:25
 
-The common tool to use when we analyze this image is `exiftool`. This can give us metadata about the image such as time and location. However, time is pretty much out of the question as the file had to be downloaded, likely altering the creation and modification timestamps. 
+The common tool to use when we analyze this image is `exiftool`. This can give us metadata about the image such as time and location. However, time is pretty much out of the question as seen from the last modified time being 4 December 2020 close to midnight which was when I downloaded the file. 
 
 ```bash
 $ exiftool osint-challenge-6.jpg
@@ -1105,8 +1300,7 @@ After slowly analyzing the page source, we find a html comment left by the devs.
 
 Hmm... Let's follow the path and search for @joshhky on gitlab. We can view his profile on gitlab using this [link](https://gitlab.com/joshhky). We can confirm that we are on the right path as we see several projects with "KoroVax" in them, suggesting that this user was indeed created for the purpose of the CTF. 
 
-At this stage, we viewed all the repositories and projects he created/imported trying to find any clues. However, majority of them were empty. The only anomaly out of his entire activity was the commit which contained changes in the project README. We can  
-click on the commit ID to view more details about it. 
+At this stage, we viewed all the repositories and projects he created/imported trying to find any clues. However, majority of them were empty. The only anomaly out of his entire activity was the commit which contained changes in the project README. We can click on the commit ID to view more details about it. 
 
 ![](https://i.imgur.com/mlINEyj.png)
 
@@ -1115,13 +1309,6 @@ Upon closer inspection, we see that in the Todo, there is a point about how not 
 After wrapping it in the flag format, we try to submit the flag and... it was correct after all :)
 
 **Flag:** `govtech-csg{krs-admin-portal}`
-
-
-### Where was he kidnapped?
-Points: 790<br>
-Solves: 29
-
-@MiloTruck
 
 ### Hunt him down!
 Points: 970<br>
@@ -1201,7 +1388,7 @@ Googling the location of Social Space we see that there are 2 branches.
 ![](https://i.imgur.com/NPYQ5rF.png)
 However we also know that Lau Pa Sat is just a few minutes away. Hence it is more likely that he was referring to the branch at Marina One rather than the one at Outram. Now we have our postal code: 018925. Our final flag is
 
-Flag: govtech-csg{LionelChengXiangYi_963672918_018925}
+**Flag:** govtech-csg{LionelChengXiangYi_963672918_018925}
 
 ### Who are the possible kidnappers?
 Points: 1990<br>
@@ -1316,7 +1503,7 @@ Solves: 11
 
 Looking at `index.html`, we open it in the browser, but nothing seems to show up on the page. We view the browser console to see an undefined variable error message in `invite.js`, imported through a `<script>` tag. For `jquery-led.js`, it appears as decently well written and formatted code, with the author credited and license mentioned as well. After a little Googling, we quickly discover that it is an open-source plug-in, [here](https://webartdevelopers.com/blog/tag/jquery-led/). We can conclude these are likely not needed to be reversed, and instead it is `invite.js` that does, being related to the challenge name as well.
 
-#### Breaking down `invite.js`
+#### Breaking down invite.js
 
 Rather than handling the mess of obfuscation entirely manually, we can put it into an automatic formatter. For JavaScript, we can just use [beautifier.io](https://beautifier.io/). The beautified code looks like this:
 
@@ -1391,8 +1578,7 @@ Before starting, we remove the `try` block, and put the IIFE into `console.log`,
 With a little `console.log`-ing, we find that the `while` loop runs for exactly one iteration, and the assignment of `_0x92e4x5` does occur. The `.replace(regex, callback)` method on `String.prototype` is called on the string `_0x92e4x5`. The _intended_ regex takes word bounds, `'\b'` from the argument of the `RegExp` constructor, and the `'\w+'` from the string array, with a global flag `'g'`, forming the regex `/\b\w+\b/`. However, one well-known caveat of the `RegExp` constructor, from past experience dealing with JavaScript regexes, is the escaping. The backslashes on the word bound `\b` and word character `\w` character classes, would appear in the raw regex literal, they would have to be escaped (as `\\`) when in a string passed to the `RegExp` constructor. Simply inserting this double backslash in all three places, and running the code again, we have the argument passed to the IIFE:
 
 ```javascript
-x=[0,0,0];const compare=(a,b)=>{let s='';for(let i=0;i<Math.max(a.length,b.length);i++){s+=String.fromCharCode((a.charCodeAt(i)||0)^(b.charCodeAt(i)||0))}return s};if(location.protocol=='file:'){x[0]=23}else{x[0]=57}if(compare(window.location.hostname,"you're invited!!!")==unescape("%1E%00%03S%17%06HD%0D%02%0FZ%09%0BB@M")){x[1]=88}else{x[1]=31}function yyy(){var uuu=false;var zzz=new Image();Object.defineProperty(zzz,'id',{get:function(){uuu=true;x[2]=54}});requestAnimationFrame(function X(){uuu=false;console.log("%c",zzz);if(!uuu){x[2]=98}})};yyy();function ooo(seed){var m=0xff;var a=11;var c=17;var z=seed||3;return function(){z=(a*z+c)%m;return z}}function iii(eee){ttt=eee[0]<<16|eee[1]<<8|eee[2];rrr=ooo(ttt);ggg=window.location.pathname.slice(1);hhh="";for(i=0;i<ggg.length;i++){hhh+=String.fromCharCode(ggg.charCodeAt(i)-1)}vvv=atob("3V3jYanBpfDq5QAb7OMCcT//k/leaHVWaWLfhj4=");mmm="";if(hhh.slice(0,2)=="go"&&hhh.charCodeAt(2)==118&&hhh.indexOf('ech-c')==4){for(i=0;i<vvv.length;i++){mmm+=String.fromCharCode(vvv.charCodeAt(i)^rrr())}alert("Thank you for accepting the invite!
-"+hhh+mmm)}}for(a=0;a!=1000;a++){debugger}$('.custom1').catLED({type:'custom',color:'#FF0000',background_color:'#e0e0e0',size:10,rounded:5,font_type:4,value:" YOU'RE INVITED! "});$('.custom2').catLED({type:'custom',color:'#FF0000',background_color:'#e0e0e0',size:10,rounded:5,font_type:4,value:"                 "});$('.custom3').catLED({type:'custom',color:'#FF0000',background_color:'#e0e0e0',size:10,rounded:5,font_type:4,value:"   WE WANT YOU!  "});setTimeout(function(){iii(x)},2000);
+x=[0,0,0];const compare=(a,b)=>{let s='';for(let i=0;i<Math.max(a.length,b.length);i++){s+=String.fromCharCode((a.charCodeAt(i)||0)^(b.charCodeAt(i)||0))}return s};if(location.protocol=='file:'){x[0]=23}else{x[0]=57}if(compare(window.location.hostname,"you're invited!!!")==unescape("%1E%00%03S%17%06HD%0D%02%0FZ%09%0BB@M")){x[1]=88}else{x[1]=31}function yyy(){var uuu=false;var zzz=new Image();Object.defineProperty(zzz,'id',{get:function(){uuu=true;x[2]=54}});requestAnimationFrame(function X(){uuu=false;console.log("%c",zzz);if(!uuu){x[2]=98}})};yyy();function ooo(seed){var m=0xff;var a=11;var c=17;var z=seed||3;return function(){z=(a*z+c)%m;return z}}function iii(eee){ttt=eee[0]<<16|eee[1]<<8|eee[2];rrr=ooo(ttt);ggg=window.location.pathname.slice(1);hhh="";for(i=0;i<ggg.length;i++){hhh+=String.fromCharCode(ggg.charCodeAt(i)-1)}vvv=atob("3V3jYanBpfDq5QAb7OMCcT//k/leaHVWaWLfhj4=");mmm="";if(hhh.slice(0,2)=="go"&&hhh.charCodeAt(2)==118&&hhh.indexOf('ech-c')==4){for(i=0;i<vvv.length;i++){mmm+=String.fromCharCode(vvv.charCodeAt(i)^rrr())}alert("Thank you for accepting the invite!"+hhh+mmm)}}for(a=0;a!=1000;a++){debugger}$('.custom1').catLED({type:'custom',color:'#FF0000',background_color:'#e0e0e0',size:10,rounded:5,font_type:4,value:" YOU'RE INVITED! "});$('.custom2').catLED({type:'custom',color:'#FF0000',background_color:'#e0e0e0',size:10,rounded:5,font_type:4,value:"                 "});$('.custom3').catLED({type:'custom',color:'#FF0000',background_color:'#e0e0e0',size:10,rounded:5,font_type:4,value:"   WE WANT YOU!  "});setTimeout(function(){iii(x)},2000);
 ```
 
 Now it would be sufficiently clear: This is more JavaScript code; the global function `gl.KG` that we want is just `eval()`. In the browser console, it merely gives a decoration on the page, and pauses midway in the debugger. Removing the `debugger` statement, a message appears through the `jquery-led.js` plug-in - but still no sign of the flag. Perhaps we need to take a closer look at the code rather than a cursory skim. Again, into [beautifier.io](https://beautifier.io/) it goes.
@@ -1501,7 +1687,7 @@ Using a proxy like ZAP allows us to inspect the request further. We notice that 
 
 Extracting the access token, we can view its contents either by manually decoding the base64, using an online tool such as [jwt.io](https://jwt.io) or using any [tool](https://github.com/ticarpi/jwt_tool) of your choice.
 
-```
+```txt
 =====================
 Decoded Token Values:
 =====================
@@ -1527,10 +1713,13 @@ For tokens using `HS256`, the key is meant to be kept secret, whereas with RS256
 To download, the public key, we can simply append `/public.pem` to the back of the url. Now we just need to change the contents which is simple base64 encoding and sign the token with `public.pem`. 
 
 Since I'm lazy to code and there are already many existing tools on github for JWTs I just used this tool to sign the token. Our tampered jwt looks like this:
-`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1pbmlvbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTYwNzUzNDg3NX0.Unoy8MAMqqoEqqLVWf5DQ6_oljR1L9f8oahKA9Zp8SQ`
+
+```TXT
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1pbmlvbiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTYwNzUzNDg3NX0.Unoy8MAMqqoEqqLVWf5DQ6_oljR1L9f8oahKA9Zp8SQ
+```
 
 Its decoded contents:
-```
+```TXT
 =====================
 Decoded Token Values:
 =====================
@@ -1549,6 +1738,6 @@ Now we just need to submit use this token to make the GET request and sure enoug
 
 ![](https://i.imgur.com/r0HqOCy.png)
 
-Flag: `govtech-csg{5!gN_0F_+h3_T!m3S}`
+**Flag:** `govtech-csg{5!gN_0F_+h3_T!m3S}`
 
 This took me a while because I only saw the hint after about 30 mins to an hour of trying. I guess my biggest takeaway from this challenge is to always do recon properly first and don't just blindly jump straight in and try exploit. 
