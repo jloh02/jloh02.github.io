@@ -544,6 +544,7 @@ _Note: Check out [Wireshark's display filter expressions](https://www.wireshark.
 
 #### Extracting data bytes
 Now that we know how to filter the relevant packets, we need to extract the data bytes from these packets. This can be done using `tshark`. Using `tshark -h`, we find these relevant options:
+
 | Option and Format                                          | Explanation                                         |
 |------------------------------------------------------------|-----------------------------------------------------|
 | `-r <infile>, --read-file <infile>`                        | set the filename to read from (or '-' for stdin)    |
