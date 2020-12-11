@@ -4,5 +4,9 @@
   function gtag(){dataLayer.push(arguments)};
   gtag('js', new Date());
 
-  gtag('config', '{{site.analytics-id}}');
+  //gtag('config', '{{site.analytics-id}}');
+
+  gtag('config', '{{site.analytics-id}}', {
+    'page_path': location.pathname + location.search + location.hash
+  });
 </script>
