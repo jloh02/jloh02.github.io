@@ -12,8 +12,6 @@ image: "/images/CTF/stack-the-flags-2020/logo.png"
 <!-- TOC depthTo:3 -->
 
 - [Overview](#overview)
-- [Binary Exploitation](#binary-exploitation)
-	- [Beta Reporting System](#beta-reporting-system)
 - [Cloud](#cloud)
 	- [Find the leaking bucket!](#find-the-leaking-bucket)
 - [Cryptography](#cryptography)
@@ -25,16 +23,11 @@ image: "/images/CTF/stack-the-flags-2020/logo.png"
 	- [COVID's Communication Technology!](#covids-communication-technology)
 	- [I smell updates!](#i-smell-updates)
 - [Mobile](#mobile)
-	- [What's with the Search!](#whats-with-the-search)
-	- [All about Korovax!](#all-about-korovax)
-	- [True or false?](#true-or-false)
 	- [A to Z of COViD!](#a-to-z-of-covid)
-	- [Task, task, task!](#task-task-task)
 - [Open Source Intelligence (OSINT)](#open-source-intelligence-osint)
 	- [Only time will tell!](#only-time-will-tell)
 	- [Sounds of freedom!](#sounds-of-freedom)
 	- [What is he working on? Some high value project?](#what-is-he-working-on-some-high-value-project)
-	- [Where was he kidnapped?](#where-was-he-kidnapped)
 	- [Hunt him down!](#hunt-him-down)
 	- [Who are the possible kidnappers?](#who-are-the-possible-kidnappers)
 - [Social Engineering](#social-engineering)
@@ -53,12 +46,6 @@ Position: 3<br>
 Score: 37754
 
 ![](https://i.imgur.com/gxuIIs9.jpg)
-
-## Binary Exploitation
-### Beta Reporting System
-Points: 994<br>
-Solves: 4<br>
-@MiloTruck 
 
 ## Cloud
 ### Find the leaking bucket!
@@ -913,18 +900,6 @@ It is correct, hence the flag is `govtech-csg{aNtiB!e}`
 **Flag:** `govtech-csg{aNtiB!e}`
 
 ## Mobile
-### What's with the Search!
-Points: 984<br>
-Solves: 10
-
-### All about Korovax!
-Points: 984<br>
-Solves: 10
-
-### True or false?
-Points: 1962<br>
-Solves: 11
-
 ### A to Z of COViD!
 Points: 1986<br>
 Solves: 5
@@ -1156,12 +1131,6 @@ This displays the congratulations window with the flag:
 
 **Flag:** `govtech-csg{1 L0V3 y0U 3oO0}`
 
-### Task, task, task!
-Points: 1990<br>
-Solves: 3
-
-(Solved after CTF?)
-
 ## Open Source Intelligence (OSINT)
 ### Only time will tell!
 Points: 691<br>
@@ -1340,13 +1309,6 @@ Upon closer inspection, we see that in the Todo, there is a point about how not 
 After wrapping it in the flag format, we try to submit the flag and... it was correct after all :)
 
 **Flag:** `govtech-csg{krs-admin-portal}`
-
-
-### Where was he kidnapped?
-Points: 790<br>
-Solves: 29
-
-@MiloTruck
 
 ### Hunt him down!
 Points: 970<br>
