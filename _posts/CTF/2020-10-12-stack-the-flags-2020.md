@@ -93,7 +93,7 @@ Why is there an extra document there??? Looks like it was left there on purpose.
 3. We have an unencrypted copy of one of the files
 
 Surely, this having access to one of the files must help right? And indeed it does. Knowing the plaintext of one of the files makes the zip vulnerable to a plaintext attack. We can use `pkcrack` to perform this attack. For this to happen, we also need to ensure that our plaintext is compressed in the same way as the encrypted zip. Initally, we tried to use Ubuntu default archive manager, and that didn't work. Next we tried zipping it from the cmdline using:
-`zip -r known.txt STACK\ the\ Flags\ Consent\ and\ Indemnity\ Form.docx`
+`zip -r known.zip STACK\ the\ Flags\ Consent\ and\ Indemnity\ Form.docx`
 
 Within a few seconds, pkcrack gives us an unencrypted zip file which contains our `flag.txt`.
 
