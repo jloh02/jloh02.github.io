@@ -795,6 +795,7 @@ if ( buf[3] == magic(2 * buf[1] - 51) ) ++i;
 ```
 
 Thus, we restart execution and enter `aNtaaaa` as input:
+
 _In gdb terminal window_
 ```bash
 (gdb) kill
