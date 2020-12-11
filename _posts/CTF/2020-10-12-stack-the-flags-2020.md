@@ -275,7 +275,8 @@ We are given a WAV audio file. With our limited knowledge of WAV stegnography, w
 
 The text found is a base64 text as seen from the variation of letters used and the `=` padding to ensure the length is a multiple of 4. After decoding it (using <https://base64decode.org> or `base64` tool), we find a pastebin link (<https://pastebin.com/jETj2uUb>) which contains the text below.
 
-```
+
+```brainfuck
 ++++++++++[>+>+++>+++++++>++++++++++<<<<-]>>>>++++++++++++++++.------------.+.++++++++++.----------.++++++++++.-----.+.+++++..------------.---.+.++++++.-----------.++++++.
 ```
 
@@ -724,7 +725,7 @@ This means we can obtain the correct character at any position if we know the co
 
 _Before diving into gdb, remember that the aim is to obtain the return values of magic()_
 We use the `disas` command to obtain the disassembly of the `magic()` function:
-```asm
+```nasm
 (gdb) disas magic
 Dump of assembler code for function magic:
    0x000107c8 <+0>:     push    {r11, lr}
@@ -1299,8 +1300,7 @@ After slowly analyzing the page source, we find a html comment left by the devs.
 
 Hmm... Let's follow the path and search for @joshhky on gitlab. We can view his profile on gitlab using this [link](https://gitlab.com/joshhky). We can confirm that we are on the right path as we see several projects with "KoroVax" in them, suggesting that this user was indeed created for the purpose of the CTF. 
 
-At this stage, we viewed all the repositories and projects he created/imported trying to find any clues. However, majority of them were empty. The only anomaly out of his entire activity was the commit which contained changes in the project README. We can  
-click on the commit ID to view more details about it. 
+At this stage, we viewed all the repositories and projects he created/imported trying to find any clues. However, majority of them were empty. The only anomaly out of his entire activity was the commit which contained changes in the project README. We can click on the commit ID to view more details about it. 
 
 ![](https://i.imgur.com/mlINEyj.png)
 
@@ -1503,7 +1503,7 @@ Solves: 11
 
 Looking at `index.html`, we open it in the browser, but nothing seems to show up on the page. We view the browser console to see an undefined variable error message in `invite.js`, imported through a `<script>` tag. For `jquery-led.js`, it appears as decently well written and formatted code, with the author credited and license mentioned as well. After a little Googling, we quickly discover that it is an open-source plug-in, [here](https://webartdevelopers.com/blog/tag/jquery-led/). We can conclude these are likely not needed to be reversed, and instead it is `invite.js` that does, being related to the challenge name as well.
 
-#### Breaking down `invite.js`
+#### Breaking down invite.js
 
 Rather than handling the mess of obfuscation entirely manually, we can put it into an automatic formatter. For JavaScript, we can just use [beautifier.io](https://beautifier.io/). The beautified code looks like this:
 
@@ -1578,8 +1578,7 @@ Before starting, we remove the `try` block, and put the IIFE into `console.log`,
 With a little `console.log`-ing, we find that the `while` loop runs for exactly one iteration, and the assignment of `_0x92e4x5` does occur. The `.replace(regex, callback)` method on `String.prototype` is called on the string `_0x92e4x5`. The _intended_ regex takes word bounds, `'\b'` from the argument of the `RegExp` constructor, and the `'\w+'` from the string array, with a global flag `'g'`, forming the regex `/\b\w+\b/`. However, one well-known caveat of the `RegExp` constructor, from past experience dealing with JavaScript regexes, is the escaping. The backslashes on the word bound `\b` and word character `\w` character classes, would appear in the raw regex literal, they would have to be escaped (as `\\`) when in a string passed to the `RegExp` constructor. Simply inserting this double backslash in all three places, and running the code again, we have the argument passed to the IIFE:
 
 ```javascript
-x=[0,0,0];const compare=(a,b)=>{let s='';for(let i=0;i<Math.max(a.length,b.length);i++){s+=String.fromCharCode((a.charCodeAt(i)||0)^(b.charCodeAt(i)||0))}return s};if(location.protocol=='file:'){x[0]=23}else{x[0]=57}if(compare(window.location.hostname,"you're invited!!!")==unescape("%1E%00%03S%17%06HD%0D%02%0FZ%09%0BB@M")){x[1]=88}else{x[1]=31}function yyy(){var uuu=false;var zzz=new Image();Object.defineProperty(zzz,'id',{get:function(){uuu=true;x[2]=54}});requestAnimationFrame(function X(){uuu=false;console.log("%c",zzz);if(!uuu){x[2]=98}})};yyy();function ooo(seed){var m=0xff;var a=11;var c=17;var z=seed||3;return function(){z=(a*z+c)%m;return z}}function iii(eee){ttt=eee[0]<<16|eee[1]<<8|eee[2];rrr=ooo(ttt);ggg=window.location.pathname.slice(1);hhh="";for(i=0;i<ggg.length;i++){hhh+=String.fromCharCode(ggg.charCodeAt(i)-1)}vvv=atob("3V3jYanBpfDq5QAb7OMCcT//k/leaHVWaWLfhj4=");mmm="";if(hhh.slice(0,2)=="go"&&hhh.charCodeAt(2)==118&&hhh.indexOf('ech-c')==4){for(i=0;i<vvv.length;i++){mmm+=String.fromCharCode(vvv.charCodeAt(i)^rrr())}alert("Thank you for accepting the invite!
-"+hhh+mmm)}}for(a=0;a!=1000;a++){debugger}$('.custom1').catLED({type:'custom',color:'#FF0000',background_color:'#e0e0e0',size:10,rounded:5,font_type:4,value:" YOU'RE INVITED! "});$('.custom2').catLED({type:'custom',color:'#FF0000',background_color:'#e0e0e0',size:10,rounded:5,font_type:4,value:"                 "});$('.custom3').catLED({type:'custom',color:'#FF0000',background_color:'#e0e0e0',size:10,rounded:5,font_type:4,value:"   WE WANT YOU!  "});setTimeout(function(){iii(x)},2000);
+x=[0,0,0];const compare=(a,b)=>{let s='';for(let i=0;i<Math.max(a.length,b.length);i++){s+=String.fromCharCode((a.charCodeAt(i)||0)^(b.charCodeAt(i)||0))}return s};if(location.protocol=='file:'){x[0]=23}else{x[0]=57}if(compare(window.location.hostname,"you're invited!!!")==unescape("%1E%00%03S%17%06HD%0D%02%0FZ%09%0BB@M")){x[1]=88}else{x[1]=31}function yyy(){var uuu=false;var zzz=new Image();Object.defineProperty(zzz,'id',{get:function(){uuu=true;x[2]=54}});requestAnimationFrame(function X(){uuu=false;console.log("%c",zzz);if(!uuu){x[2]=98}})};yyy();function ooo(seed){var m=0xff;var a=11;var c=17;var z=seed||3;return function(){z=(a*z+c)%m;return z}}function iii(eee){ttt=eee[0]<<16|eee[1]<<8|eee[2];rrr=ooo(ttt);ggg=window.location.pathname.slice(1);hhh="";for(i=0;i<ggg.length;i++){hhh+=String.fromCharCode(ggg.charCodeAt(i)-1)}vvv=atob("3V3jYanBpfDq5QAb7OMCcT//k/leaHVWaWLfhj4=");mmm="";if(hhh.slice(0,2)=="go"&&hhh.charCodeAt(2)==118&&hhh.indexOf('ech-c')==4){for(i=0;i<vvv.length;i++){mmm+=String.fromCharCode(vvv.charCodeAt(i)^rrr())}alert("Thank you for accepting the invite!"+hhh+mmm)}}for(a=0;a!=1000;a++){debugger}$('.custom1').catLED({type:'custom',color:'#FF0000',background_color:'#e0e0e0',size:10,rounded:5,font_type:4,value:" YOU'RE INVITED! "});$('.custom2').catLED({type:'custom',color:'#FF0000',background_color:'#e0e0e0',size:10,rounded:5,font_type:4,value:"                 "});$('.custom3').catLED({type:'custom',color:'#FF0000',background_color:'#e0e0e0',size:10,rounded:5,font_type:4,value:"   WE WANT YOU!  "});setTimeout(function(){iii(x)},2000);
 ```
 
 Now it would be sufficiently clear: This is more JavaScript code; the global function `gl.KG` that we want is just `eval()`. In the browser console, it merely gives a decoration on the page, and pauses midway in the debugger. Removing the `debugger` statement, a message appears through the `jquery-led.js` plug-in - but still no sign of the flag. Perhaps we need to take a closer look at the code rather than a cursory skim. Again, into [beautifier.io](https://beautifier.io/) it goes.
@@ -1688,7 +1687,7 @@ Using a proxy like ZAP allows us to inspect the request further. We notice that 
 
 Extracting the access token, we can view its contents either by manually decoding the base64, using an online tool such as [jwt.io](https://jwt.io) or using any [tool](https://github.com/ticarpi/jwt_tool) of your choice.
 
-```TXT
+```txt
 =====================
 Decoded Token Values:
 =====================
