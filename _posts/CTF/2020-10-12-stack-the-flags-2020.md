@@ -1461,7 +1461,7 @@ After finishing the challenge, I guess the most important thing we learnt was to
 ## Social Engineering
 ### Can you trick OrgX into giving away their credentials?
 Points: 2000<br>
-Solves: 1
+Solves: 1<br>
 Remarks: First Blood
 
 #### Challenge Description
