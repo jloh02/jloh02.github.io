@@ -9,35 +9,8 @@ image: "/images/CTF/stack-the-flags-2020/logo.png"
 ---
 
 <h2> Contents </h2>
-<!-- TOC depthTo:3 -->
-
-- [Overview](#overview)
-- [Cloud](#cloud)
-	- [Find the leaking bucket!](#find-the-leaking-bucket)
-- [Cryptography](#cryptography)
-	- [Can COViD steal Bob's idea?](#can-covid-steal-bobs-idea)
-- [Forensics](#forensics)
-	- [Walking down a colourful memory lane](#walking-down-a-colourful-memory-lane)
-	- [Voices in the head](#voices-in-the-head)
-- [Internet of Things](#internet-of-things)
-	- [COVID's Communication Technology!](#covids-communication-technology)
-	- [I smell updates!](#i-smell-updates)
-- [Mobile](#mobile)
-	- [A to Z of COViD!](#a-to-z-of-covid)
-- [Open Source Intelligence (OSINT)](#open-source-intelligence-osint)
-	- [Only time will tell!](#only-time-will-tell)
-	- [Sounds of freedom!](#sounds-of-freedom)
-	- [What is he working on? Some high value project?](#what-is-he-working-on-some-high-value-project)
-	- [Hunt him down!](#hunt-him-down)
-	- [Who are the possible kidnappers?](#who-are-the-possible-kidnappers)
-- [Social Engineering](#social-engineering)
-	- [Can you trick OrgX into giving away their credentials?](#can-you-trick-orgx-into-giving-away-their-credentials)
-- [Reverse Engineering](#reverse-engineering)
-	- [An invitation](#an-invitation)
-- [Web](#web)
-	- [Unlock Me](#unlock-me)
-
-<!-- /TOC -->
+- TOC
+{:toc}
 
 
 ## Overview
