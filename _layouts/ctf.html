@@ -57,7 +57,9 @@
 								</ul>
 							</article>							
 						{% endfor %}
-						{% if site.categories.CTF | size | modulo: 2  == 1 %}
+
+						{% assign len = site.categories.CTF.size | modulo:2 %}
+						{% if len == 1 %}
 							<article>
 								<header>
 									<span class="date"></span>

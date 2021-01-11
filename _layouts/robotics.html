@@ -69,7 +69,8 @@
 								</ul>
 							</article>							
 						{% endfor %}
-						{% if site.categories.Robotics | size | modulo: 2  == 1 %}
+						{% assign len = site.categories.robotics.size | modulo:2 %}
+						{% if len == 1 %}
 							<article>
 								<header>
 									<span class="date"></span>
